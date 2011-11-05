@@ -1,0 +1,24 @@
+[playlist]
+NumberOfEntries=11
+File1=severedfifth_foretoldrevelation.ogg
+Title1=Severed Fifth - Foretold Revelation
+File2=severedfifth_drilldown.ogg
+Title2=Severed Fifth - Drill Down
+File3=severedfifth_politicold.ogg
+Title3=Severed Fifth - Politicold
+File4=severedfifth_fightphilosophy.ogg
+Title4=Severed Fifth - Fight Philosophy
+File5=severedfifth_fallout.ogg
+Title5=Severed Fifth - Fallout
+File6=severedfifth_forgottenheroes.ogg
+Title6=Severed Fifth - Forgotten Heroes
+File7=severedfifth_theblackening.ogg
+Title7=Severed Fifth - The Blackening
+File8=severedfifth_theyprey.ogg
+Title8=Severed Fifth - They Prey
+File9=severedfifth_endofdays.ogg
+Title9=Severed Fifth - End Of Days
+File10=severedfifth_machinesofwar.ogg
+Title10=Severed Fifth - Machines Of War
+File11=severedfifth_repent.ogg
+Title11=Severed Fifth - Repent
