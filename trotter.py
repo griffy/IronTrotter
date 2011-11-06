@@ -9,6 +9,7 @@ from twisted.internet.task import LoopingCall
 
 import pygame
 import colors
+import map
 
 
 class TrotterSub(protocol.Protocol):
@@ -39,6 +40,8 @@ def main():
     title = pygame.image.load("images/titleScreen.png")
     titlerect = title.get_rect()
 
+    mapthing = map.generate_map(1000,1000)
+
     f = protocol.ClientFactory()
     f.protocol = TrotterSub
 
@@ -53,8 +56,8 @@ def main():
                     print "c"
                 elif event.key == pygame.K_x:
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
-
-        screen.blit(title, titlerect)
+        mapthing.draw()
+        #screen.blit(title, titlerect)
         pygame.display.flip()
 
 

@@ -1,6 +1,8 @@
 import pygame
+import entity
 
 def makeMapFromFile(url):
+    pass
 
 # width and height are in tiles
 def generate_map(width, height):
@@ -55,8 +57,8 @@ class MapLayer:
 
     def get(self, x, y):
         for entity in group:
-            if (entity.sprite.rect.center == (x,y))
-                return entity
+                if entity.sprite.rect.center == (x,y):
+                    return entity
         return None
 
 class Map:
