@@ -142,10 +142,21 @@ def is_boss(entity_type):
             return True
     return False
 
+def is_solid_terrain(entity_type):
+    for etype in SOLID_TERRAIN:
+        if entity_type == etype:
+            return True
+    return False
+
 def is_living(entity_type):
     for etype in LIVING_ENTITIES:
         if entity_type == etype:
             return True
+    return False
+
+def is_player(entity_type):
+    if entity_type == SHEEP:
+        return True
     return False
 
 def is_item(entity_type):
@@ -197,7 +208,7 @@ def generate_player_entity(x, y):
     return Entity(Stats(x, y), SHEEP, True)
 
 class Entity:
-    count = 0
+    count = 1
     def __init__(self, stats, ent_type, solid, name = "", id_num=None):
         if not id_num:
             self.id_num = Entity.count

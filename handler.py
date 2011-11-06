@@ -13,7 +13,8 @@ import pygame
 import colors
 import map
 import entity
-from entity import is_boss, is_living, is_item, is_terrain
+from entity import Entity
+from entity import is_boss, is_living, is_player, is_item, is_terrain, is_solid_terrain
 import font
 import sound
 import viewport
@@ -130,14 +131,29 @@ class Handler:
         pygame.display.flip()
 
     def handleUpdate(self, update):
+        if update.idnum == 0:
+            return
         entity = None
-        if is_living(enttype) or name != "":
+        if is_living(update.enttype) or is_player(update.enttype):
             entity = self.map.layers[2].getById(update.idnum)
-        elif is_item(enttype):
+            if entity is None:
+                entity = Entity(update.stats, update.enttype,
+                                       True, update.name, update.idnum)
+                self.map.layers[2].add(entity)
+        elif is_item(update.enttype):
             entity = self.map.layers[1].getById(update.idnum)
-        elif is_terrain(enttype):
+            if entity is None:
+                entity = Entity(update.stats, update.enttype,
+                                       False, update.name, update.idnum)
+                self.map.layers[1].add(entity)
+        elif is_terrain(update.enttype):
             entity = self.map.layers[0].getById(update.idnum)
-        entity.stat = stat
+            if entity is None:
+                entity = Entity(update.stats, update.enttype,
+                                       is_solid_terrain(update.enttype),
+                                       update.name, update.idnum)
+                self.map.layers[0].add(entity)
+        entity.stats = update.stats
 
     def player_quit_game(self):
         # set the player's health to 0 "killing" it

@@ -14,7 +14,9 @@ class TrotterPub(protocol.Protocol):
         self.factory.glob.update(up)
 
         # send to all other clients
-
+        for layer in self.factory.glob.map.layers:
+            for ent in layer.entities:
+                self.transport.write(pickle.dumps(ent.getUpdate(), 2))
 
 class MyFactory(protocol.Factory):
     def __init__(self, glob):
@@ -24,10 +26,6 @@ class MyFactory(protocol.Factory):
 
     def clientConnectionMade(self, client):
         self.clients.append(client)
-
-        for layer in self.glob.map.layers:
-            for ent in layer.entities:
-                client.transport.write(ent.getUpdate())
 
     def clientConnectionLost(self, client):
         self.clients.remove(client)
