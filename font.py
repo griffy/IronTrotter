@@ -3,13 +3,17 @@ import colors
 
 class Font:
     def __init__(self, font_url, font_size, fgcolor=colors.BLACK,
-                 bgcolor=None):
+                 bgcolor=colors.CLEAR):
         self.font = pygame.font.Font(font_url, font_size)
         self.fgcolor = fgcolor
         self.bgcolor = bgcolor
 
     def draw(self, x, y, text):
-        text_surf = self.font.render(text, True, self.fgcolor, self.bgcolor)
+        if self.bgcolor != colors.CLEAR:
+            text_surf = self.font.render(text, True, self.fgcolor, self.bgcolor)
+        else:
+            text_surf = self.font.render(text, True, self.fgcolor)
+
         text_rect = text_surf.get_rect()
         text_rect.centerx = x
         text_rect.centery = y
