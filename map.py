@@ -83,7 +83,7 @@ class MapLayer:
     def update(self, viewport):
         to_kill = []
         for i, entity in enumerate(self.entities):
-            if entity.stats.hp == 0:
+            if entity.stats.hp <= 0:
                 to_kill.append(i)
             else:
                 entity.update(viewport)
