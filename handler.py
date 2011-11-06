@@ -60,7 +60,8 @@ class Handler:
 
         self.gameMusic = pygame.mixer.Sound("music/"+choice(musics))
         self.attackSound = pygame.mixer.Sound("sounds/erdie__sword01.wav")
-
+        self.ghastlySound = pygame.mixer.Sound("sounds/johnc__moan.wav")
+        self.hurtSound = pygame.mixer.Sound("sounds/halleck__jacobsladdersingle2.mp3")
 
         self.lc = LoopingCall(self.titleevent)
         self.lc.start(0.1)
@@ -152,7 +153,7 @@ class Handler:
             self.pickup_item()
 
         self.map.update(self.viewport)
-        if self.map.is_cleared():
+        if self.map.is_cleared() or self.player.stats.hp <= 0:
             self.lc.stop()
             self.lc = LoopingCall(self.gameoverevent)
             self.lc.start(0.1)
@@ -184,6 +185,9 @@ class Handler:
                 entity = Entity(update.stats, update.enttype,
                                 True, update.name, update.idnum)
                 self.map.layers[2].add(entity)
+            # the monster's not dead, so it's attacking. arrrgh
+            if update.stats.hp > 0 and self.player:
+                self.monster_attack(entity)
 
         elif is_player(update.enttype):
             entity = self.map.layers[2].getById(update.idnum)
@@ -218,6 +222,20 @@ class Handler:
             self.player.stats.score += scores.PLAYER
         else:
             self.player.stats.score += scores.GHOST
+
+    def monster_attack(self, entity):
+        entity_x = entity.stats.x
+        entity_y = entity.stats.y
+        player_x = self.player.stats.x
+        player_y = self.player.stats.y
+
+        dist = abs(entity_x - player_x) + abs(entity_y - player_y)
+        if dist < 2:
+            self.hurtSound.play()
+            self.player.stats.hp -= 10
+            self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
+        elif dist < 3:
+            self.ghastlySound.play()
 
     def pickup_item(self):
         item = self.map.item_under_entity(self.player)
