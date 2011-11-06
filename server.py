@@ -1,35 +1,56 @@
 from twisted.internet import reactor, protocol
 
 from stats import Stats
+from update import Update
 import pickle
+
+import map
+import pygame
 
 class TrotterPub(protocol.Protocol):
     def dataReceived(self, data):
-        pickle.loads(data)
+        up = pickle.loads(data)
 
-        #self.transport.write(pickle.dumps(Stats(1,2,3), 2))
+        self.factory.glob.update(up)
+
+        # send to all other clients
 
 
 class MyFactory(protocol.Factory):
     def __init__(self, glob):
         self.clients = []
         self.protocol = TrotterPub
+        self.glob = glob
 
     def clientConnectionMade(self, client):
         self.clients.append(client)
+
+        for layer in self.glob.map.layers:
+            for ent in layer.entities:
+                client.transport.write(ent.getUpdate())
 
     def clientConnectionLost(self, client):
         self.clients.remove(client)
 
 
 class ServerGlobals:
-    def __init(self):
-        pass
+    def __init__(self):
+        self.map = map.generate_map(10,10)
+
+    def update(self, up):
+        if up.name != "":
+            self.map.addPlayer(up)
 
 def main():
     """This runs the protocol on port 8000"""
 
-    factory = MyFactory(ServerGlobals)
+    pygame.init()
+
+    screen = pygame.display.set_mode((1,1))
+
+    glob = ServerGlobals()
+
+    factory = MyFactory(glob)
 
     reactor.listenTCP(8000,factory)
     reactor.run()

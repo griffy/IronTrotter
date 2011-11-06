@@ -4,6 +4,7 @@ from entity import generate_item_entity
 from entity import generate_living_entity
 from entity import generate_terrain_entity
 from entity import generate_player_entity
+from entity import Entity
 
 def makeMapFromFile(url):
     pass
@@ -110,8 +111,8 @@ class Map:
         self.layers = layers
         if not layers:
             self.layers = [MapLayer(width, height),
-                          MapLayer(width, height),
-                          MapLayer(width, height)]
+                           MapLayer(width, height),
+                           MapLayer(width, height)]
 
     def draw(self):
         for layer in self.layers:
