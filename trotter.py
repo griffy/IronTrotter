@@ -15,6 +15,7 @@ def main():
     pygame.init()
 
     pygame.display.set_caption("Iron Trotter")
+    pygame.display.set_icon(pygame.image.load("images/icon.png"))
 
     width, height = 800, 600
     screen = pygame.display.set_mode((width, height))
