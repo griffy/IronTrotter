@@ -77,6 +77,18 @@ class MapLayer:
         if map_url:
             self.load(map_url)
 
+    def update(self):
+        to_kill = []
+        for i, entity in enumerate(self.entities):
+            if entity.stats.hp == 0:
+                to_kill.append(i)
+            else:
+                entity.update()
+        to_kill.reverse()
+        for i in to_kill:
+            self.entities[i].sprite.kill()
+            self.entities.pop(i)
+
     def draw(self):
         self.group.draw(pygame.display.get_surface())
 
@@ -117,6 +129,9 @@ class Map:
                            MapLayer(width, height),
                            MapLayer(width, height)]
 
+    def update(self):
+        for layer in self.layers:
+            layer.update()
 
     def draw(self):
         for layer in self.layers:
@@ -170,7 +185,7 @@ class Map:
     def is_player_down(self,entity):
         for player in self.player_list:
             if player.stats.y > entity.stats.y:
-                return True            
+                return True
         return False
 
     def is_player_left(self, entity):
