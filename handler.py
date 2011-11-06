@@ -189,6 +189,9 @@ class Handler:
             item.stats.hp = 0
             self.player.stats.score += scores.POTION
             self.f.transport.write(pickle.dumps(item.getUpdate(),2))
+            # give the player a 15 hitpoint boost
+            self.player.stats.hp += 15
+            self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
 
     def player_attack(self):
         direction = self.player.sprite.direction
@@ -200,28 +203,28 @@ class Handler:
                 entity.stats.hp -= 25
                 if entity.stats.hp <= 0:
                     self.score_kill(entity)
-                self.f.transport.write(pickle.dumps(entity.getUpdate()))
+                self.f.transport.write(pickle.dumps(entity.getUpdate(),2))
         elif direction == sprite.RIGHT:
             if self.map.is_entity_blocked_right(self.player):
                 entity = self.map.layers[2].get(x+1, y)
                 entity.stats.hp -= 25
                 if entity.stats.hp <= 0:
                     self.score_kill(entity)
-                self.f.transport.write(pickle.dumps(entity.getUpdate()))
+                self.f.transport.write(pickle.dumps(entity.getUpdate(),2))
         elif direction == sprite.UP:
             if self.map.is_entity_blocked_up(self.player):
                 entity = self.map.layers[2].get(x, y-1)
                 entity.stats.hp -= 25
                 if entity.stats.hp <= 0:
                     self.score_kill(entity)
-                self.f.transport.write(pickle.dumps(entity.getUpdate()))
+                self.f.transport.write(pickle.dumps(entity.getUpdate(),2))
         elif direction == sprite.DOWN:
             if self.map.is_entity_blocked_down(self.player):
                 entity = self.map.layers[2].get(x, y+1)
                 entity.stats.hp -= 25
                 if entity.stats.hp <= 0:
                     self.score_kill(entity)
-                self.f.transport.write(pickle.dumps(entity.getUpdate()))
+                self.f.transport.write(pickle.dumps(entity.getUpdate(),2))
 
     def player_quit_game(self):
         # set the player's health to 0 "killing" it
