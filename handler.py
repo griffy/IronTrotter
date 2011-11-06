@@ -118,7 +118,7 @@ class Handler:
                 if event.key == pygame.K_w:
                     moved = self.player_move_up()
                 elif event.key == pygame.K_a:
-                    moved =self.player_move_left()
+                    moved = self.player_move_left()
                 elif event.key == pygame.K_s:
                     moved = self.player_move_down()
                 elif event.key == pygame.K_d:
@@ -142,37 +142,8 @@ class Handler:
             entity = self.map.layers[2].getById(update.idnum)
             if entity is None:
                 entity = Entity(update.stats, update.enttype,
-                                       True, update.name, update.idnum)
+                                True, update.name, update.idnum)
                 self.map.layers[2].add(entity)
-            # move the g-g-g-g-ghost
-            moves = []
-            if self.map.is_player_up(entity):
-                moves.append("up")
-            if self.map.is_player_down(entity):
-                moves.append("down")
-            if self.map.is_player_left(entity):
-                moves.append("left")
-            if self.map.is_player_right(entity):
-                moves.append("right")
-
-            if not moves:
-                move = choice(["up", "down", "left", "right"])
-            else:
-                move = choice(moves)
-
-            if move == "up":
-                if not self.map.is_entity_blocked_up(entity):
-                    entity.stats.y -= 1
-            elif move == "down":
-                if not self.map.is_entity_blocked_down(entity):
-                    entity.stats.y += 1
-            elif move == "left":
-                if not self.map.is_entity_blocked_left(entity):
-                    entity.stats.x -= 1
-            else:
-                if not self.map.is_entity_blocked_right(entity):
-                    entity.stats.x += 1
-            self.f.transport.write(pickle.dumps(entity.getUpdate()))
 
         elif is_player(update.enttype):
             entity = self.map.layers[2].getById(update.idnum)
