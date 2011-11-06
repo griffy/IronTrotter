@@ -22,6 +22,7 @@ import sound
 import viewport
 import scores
 import hud
+from sprite import NONE, UP, DOWN, LEFT, RIGHT
 
 class Handler:
     def __init__(self, screen):
@@ -189,7 +190,7 @@ class Handler:
         if not self.map.is_entity_blocked_up(self.player):
             # update player, send to server
             self.player.stats.y -= 1
-            self.player.sprite.set_direction(0)
+            self.player.sprite.set_direction(UP)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
@@ -198,7 +199,7 @@ class Handler:
         if not self.map.is_entity_blocked_left(self.player):
             # update player, send to server
             self.player.stats.x -= 1
-            self.player.sprite.set_direction(2)
+            self.player.sprite.set_direction(LEFT)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
@@ -207,7 +208,7 @@ class Handler:
         if not self.map.is_entity_blocked_right(self.player):
             # update player, send to server
             self.player.stats.x += 1
-            self.player.sprite.set_direction(3)
+            self.player.sprite.set_direction(RIGHT)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
@@ -216,7 +217,7 @@ class Handler:
         if not self.map.is_entity_blocked_down(self.player):
             # update player, send to server
             self.player.stats.y += 1
-            self.player.sprite.set_direction(1)
+            self.player.sprite.set_direction(DOWN)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
