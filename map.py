@@ -4,6 +4,7 @@ from entity import generate_item_entity
 from entity import generate_living_entity
 from entity import generate_terrain_entity
 from entity import generate_player_entity
+from entity import Entity
 
 def makeMapFromFile(url):
     pass

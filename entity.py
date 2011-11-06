@@ -148,7 +148,7 @@ def generate_terrain_entity(x, y, maptype, floor):
     else:
         if maptype == 0 or maptype == 1:
             ent_type = GRASS_TILE
-        else: 
+        else:
             ent_type = INDOOR_TYPE[floor]
 
     stats = Stats(x, y)
