@@ -9,6 +9,7 @@ from netclient import TrotterSubFactory
 
 from twisted.internet.task import LoopingCall
 
+import random
 from random import choice
 
 import pygame
@@ -189,8 +190,8 @@ class Handler:
             item.stats.hp = 0
             self.player.stats.score += scores.POTION
             self.f.transport.write(pickle.dumps(item.getUpdate(),2))
-            # give the player a 15 hitpoint boost
-            self.player.stats.hp += 15
+            # give the player a hitpoint boost
+            self.player.stats.hp += random.randint(5, 25)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
 
     def player_attack(self):
