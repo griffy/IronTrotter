@@ -21,6 +21,7 @@ import font
 import sound
 import viewport
 import scores
+import hud
 
 class Handler:
     def __init__(self, screen):
@@ -43,6 +44,7 @@ class Handler:
         self.lc = LoopingCall(self.titleevent)
         self.lc.start(0.1)
 
+        self.hud = None
         # create an empty map for the server to fill in at the lobby
         self.map = map.Map(map.map_width, map.map_height)
         self.player = None
@@ -128,6 +130,7 @@ class Handler:
         self.map.update(self.viewport)
         # draw updated
         self.map.draw_within(self.viewport)
+        self.hud.draw()
         pygame.display.flip()
 
     # called when we receive Updates from the server
@@ -169,7 +172,7 @@ class Handler:
             else:
                 if not self.map.is_entity_blocked_right(entity):
                     entity.stats.x += 1
-
+            self.f.transport.write(pickle.dumps(entity.getUpdate()))
 
         elif is_player(update.enttype):
             entity = self.map.layers[2].getById(update.idnum)
@@ -178,6 +181,7 @@ class Handler:
                                        True, update.name, update.idnum)
                 if self.player is None:
                     self.player = entity
+                    self.hud = hud.HUD(self.player, 800, 600)
                     self.viewport = viewport.Viewport(self.player, 14, 14)
                 self.map.layers[2].add(entity)
 
