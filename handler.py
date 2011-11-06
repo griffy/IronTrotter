@@ -154,6 +154,7 @@ class Handler:
         self.map.update(self.viewport)
         if self.map.is_cleared() or self.player.stats.hp <= 0:
             self.lc.stop()
+            self.map = None
             self.lc = LoopingCall(self.gameoverevent)
             self.lc.start(0.1)
         else:
@@ -175,7 +176,7 @@ class Handler:
 
     # called when we receive Updates from the server
     def handleUpdate(self, update):
-        if update.idnum == 0:
+        if update.idnum == 0 or (self.map is None and self.player.stats.hp <= 0):
             return
         entity = None
         if is_living(update.enttype):
