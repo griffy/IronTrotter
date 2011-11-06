@@ -8,7 +8,16 @@ class Viewport:
         self.player = player
 
         self.width = width
+
+        if width % 2 == 0:
+            self.width +=1
+
         self.height = height
+
+        if height % 2 == 0:
+            self.height +=1
+
+
         self.halfW = (self.width -1) / 2
         self.halfH = (self.height -1) / 2
         self.x_offset = 0

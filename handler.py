@@ -147,6 +147,9 @@ class Handler:
                     moved = self.player_move_right()
                 elif event.key == pygame.K_SPACE:
                     self.player_attack()
+                elif event.key == pygame.K_ESCAPE:
+                    pygame.event.post(pygame.event.Event(pygame.QUIT))
+
         if moved:
             self.viewport.update_view()
             self.pickup_item()
@@ -195,8 +198,11 @@ class Handler:
                                        True, update.name, update.idnum)
                 if self.player is None:
                     self.player = entity
-                    self.hud = hud.HUD(self.player, 800, 600)
-                    self.viewport = viewport.Viewport(self.player, 25, 19)
+
+                    x = pygame.display.get_surface().get_width()
+                    y = pygame.display.get_surface().get_height()
+                    self.hud = hud.HUD(self.player, x, y)
+                    self.viewport = viewport.Viewport(self.player, int(x/32), int(y/32))
                 self.map.layers[2].add(entity)
 
         elif is_item(update.enttype):
