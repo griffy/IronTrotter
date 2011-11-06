@@ -81,7 +81,7 @@ class Handler:
                     print "c"
                 elif event.key == pygame.K_RETURN:
                     self.titleMusic.stop()
-                    self.gameMusic.play()
+                    self.gameMusic.play(-1)
                     print "DO A THING"
                     self.lc.stop()
                     self.lc = LoopingCall(self.lobbyevent)
