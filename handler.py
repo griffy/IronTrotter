@@ -196,7 +196,7 @@ class Handler:
                 if self.player is None:
                     self.player = entity
                     self.hud = hud.HUD(self.player, 800, 600)
-                    self.viewport = viewport.Viewport(self.player, 15, 15)
+                    self.viewport = viewport.Viewport(self.player, 25, 19)
                 self.map.layers[2].add(entity)
 
         elif is_item(update.enttype):
