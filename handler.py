@@ -40,11 +40,14 @@ class Handler:
         self.lc.start(0.1)
 
         # create an empty map for the server to fill in at the lobby
-        self.map = map.Map(800, 640)
+        self.map = map.Map(25, 20)
         # ditto for player
-        self.player = None
+        #self.player = None
         # and viewport
-        self.viewport = None
+        #self.viewport = None
+
+        self.player = entity.Entity(Stats(0,0), entity.LIVING_ENTITIES[0], True, "Bob")
+        self.viewport = viewport.Viewport(self.player, 5, 5)
 
     def titleevent(self):
         global counter
@@ -137,7 +140,10 @@ class Handler:
         entity.stat = stat
 
     def player_quit_game(self):
-        pass
+        # set the player's health to 0 "killing" it
+        # update the server
+        self.player.stats.hp = 0
+        self.f.transport.write(pickle.dumps(self.player.getUpdate()))
 
     def player_move_up(self):
         if not self.map.is_entity_blocked_up(self.player):
