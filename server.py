@@ -29,14 +29,22 @@ class TrotterPub(protocol.Protocol):
 
             self.transport.write(pickle.dumps(player.getUpdate(),2))
         else:
+            self.factory.glob.update(up)
+
             # send to all other clients
-            pass
+            for t in self.factory.transports:
+                if t is not self.transport:
+                    self.transport.write(pickle.dumps(up,2))
+
+    def connectionMade(self):
+        self.factory.transports.append(self.transport)
 
 class MyFactory(protocol.Factory):
     def __init__(self, glob):
         self.clients = []
         self.protocol = TrotterPub
         self.glob = glob
+        self.transports = []
 
     def clientConnectionMade(self, client):
         self.clients.append(client)
