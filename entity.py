@@ -29,7 +29,7 @@ TYPES = [
     "tiles/springTree.png",
     "tiles/grass.png",
     "tiles/redWoodLeftRight.png",
-    "tiles/redWoodUpDown.png"
+    "tiles/redWoodUpDown.png",
     "tiles/woodLeftRight.png",
     "tiles/woodUpDown.png",
 ]
