@@ -42,6 +42,34 @@ SHEEP_SPRITES = [
     "sprites/sheepRight.png"
 ]
 
+GHOST1_SPRITES = [
+    "sprites/ghost1l.png",
+    "sprites/ghost1r.png",
+    "sprites/ghost1l.png",
+    "sprites/ghost1r.png"
+]
+
+GHOST2_SPRITES = [
+    "sprites/ghost2l.png",
+    "sprites/ghost2r.png",
+    "sprites/ghost2l.png",
+    "sprites/ghost2r.png"
+]
+
+GHOST3_SPRITES = [
+    "sprites/ghost3l.png",
+    "sprites/ghost3r.png",
+    "sprites/ghost3l.png",
+    "sprites/ghost3r.png"
+]
+
+GHOST4_SPRITES = [
+    "sprites/ghost4l.png",
+    "sprites/ghost4r.png",
+    "sprites/ghost4l.png",
+    "sprites/ghost4r.png"
+]   
+
 SHEEP = 0
 LIGHTNING = 1
 BLUE_POTION = 2
@@ -226,6 +254,15 @@ class Entity:
         self.ent_type = ent_type
         if ent_type == SHEEP:
                 self.sprite = Sprite(TYPES[self.ent_type], stats.x, stats.y, 32, 32, False, 3, SHEEP_SPRITES)
+        elif ent_type == GHOST1:
+            self.sprite = Sprite(TYPES[self.ent_type], stats.x, stats.y, 32, 32, False, 3, GHOST1_SPRITES)
+        elif ent_type == GHOST2:
+            self.sprite = Sprite(TYPES[self.ent_type], stats.x, stats.y, 32, 32, False, 3, GHOST2_SPRITES)
+        elif ent_type == GHOST3:
+            self.sprite = Sprite(TYPES[self.ent_type], stats.x, stats.y, 32, 32, False, 3, GHOST3_SPRITES)
+        elif ent_type == GHOST4:
+            self.sprite = Sprite(TYPES[self.ent_type], stats.x, stats.y, 32, 32, False, 3, GHOST4_SPRITES)
+
         else:
             self.sprite = Sprite(TYPES[self.ent_type], stats.x, stats.y)
         self.solid = solid
