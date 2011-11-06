@@ -63,11 +63,18 @@ class ServerGlobals:
 
     def update(self, up):
         if isinstance(up, Update):
+            if is_living(up.enttype):
+                entity = self.map.layers[2].getById(up.idnum)
+                if entity is not None:
+                    entity.stats = up.stats
+
             if is_living(up.enttype) and up.stats.hp <= 0:
                 self.map.layers[2].entities.remove(self.map.layers[2].getById(up.idnum))
         else:
             if up.name != "":
                 self.map.addPlayer(up)
+
+
 
 def main():
     """This runs the protocol on port 8000"""
