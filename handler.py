@@ -21,6 +21,7 @@ import font
 import sound
 import viewport
 import scores
+import hud
 
 class Handler:
     def __init__(self, screen):
@@ -43,6 +44,7 @@ class Handler:
         self.lc = LoopingCall(self.titleevent)
         self.lc.start(0.1)
 
+        self.hud = None
         # create an empty map for the server to fill in at the lobby
         self.map = map.Map(map.map_width, map.map_height)
         self.player = None
@@ -116,7 +118,7 @@ class Handler:
                 if event.key == pygame.K_w:
                     moved = self.player_move_up()
                 elif event.key == pygame.K_a:
-                    moved =self.player_move_left()
+                    moved = self.player_move_left()
                 elif event.key == pygame.K_s:
                     moved = self.player_move_down()
                 elif event.key == pygame.K_d:
@@ -128,6 +130,7 @@ class Handler:
         self.map.update(self.viewport)
         # draw updated
         self.map.draw_within(self.viewport)
+        self.hud.draw()
         pygame.display.flip()
 
     # called when we receive Updates from the server
@@ -139,37 +142,8 @@ class Handler:
             entity = self.map.layers[2].getById(update.idnum)
             if entity is None:
                 entity = Entity(update.stats, update.enttype,
-                                       True, update.name, update.idnum)
+                                True, update.name, update.idnum)
                 self.map.layers[2].add(entity)
-            # move the g-g-g-g-ghost
-            moves = []
-            if self.map.is_player_up(entity):
-                moves.append("up")
-            if self.map.is_player_down(entity):
-                moves.append("down")
-            if self.map.is_player_left(entity):
-                moves.append("left")
-            if self.map.is_player_right(entity):
-                moves.append("right")
-
-            if not moves:
-                move = choice(["up", "down", "left", "right"])
-            else:
-                move = choice(moves)
-
-            if move == "up":
-                if not self.map.is_entity_blocked_up(entity):
-                    entity.stats.y -= 1
-            elif move == "down":
-                if not self.map.is_entity_blocked_down(entity):
-                    entity.stats.y += 1
-            elif move == "left":
-                if not self.map.is_entity_blocked_left(entity):
-                    entity.stats.x -= 1
-            else:
-                if not self.map.is_entity_blocked_right(entity):
-                    entity.stats.x += 1
-
 
         elif is_player(update.enttype):
             entity = self.map.layers[2].getById(update.idnum)
@@ -178,6 +152,7 @@ class Handler:
                                        True, update.name, update.idnum)
                 if self.player is None:
                     self.player = entity
+                    self.hud = hud.HUD(self.player, 800, 600)
                     self.viewport = viewport.Viewport(self.player, 15, 15)
                 self.map.layers[2].add(entity)
 
@@ -202,19 +177,19 @@ class Handler:
             # set the hp to 0 to remove it in next map update
             item.stats.hp = 0
             item.stats.score += scores.POTION
-            self.f.transport.write(pickle.dumps(item.getUpdate()))
+            self.f.transport.write(pickle.dumps(item.getUpdate(),2))
 
     def player_quit_game(self):
         # set the player's health to 0 "killing" it
         # update the server
         self.player.stats.hp = 0
-        self.f.transport.write(pickle.dumps(self.player.getUpdate()))
+        self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
 
     def player_move_up(self):
         if not self.map.is_entity_blocked_up(self.player):
             # update player, send to server
             self.player.stats.y -= 1
-            self.f.transport.write(pickle.dumps(self.player.getUpdate()))
+            self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
 
@@ -222,7 +197,7 @@ class Handler:
         if not self.map.is_entity_blocked_left(self.player):
             # update player, send to server
             self.player.stats.x -= 1
-            self.f.transport.write(pickle.dumps(self.player.getUpdate()))
+            self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
 
@@ -230,7 +205,7 @@ class Handler:
         if not self.map.is_entity_blocked_right(self.player):
             # update player, send to server
             self.player.stats.x += 1
-            self.f.transport.write(pickle.dumps(self.player.getUpdate()))
+            self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
 
@@ -238,6 +213,6 @@ class Handler:
         if not self.map.is_entity_blocked_down(self.player):
             # update player, send to server
             self.player.stats.y += 1
-            self.f.transport.write(pickle.dumps(self.player.getUpdate()))
+            self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
