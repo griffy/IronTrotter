@@ -214,37 +214,37 @@ class Handler:
         self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
 
     def player_move_up(self):
+        self.player.sprite.set_direction(sprite.UP)
         if not self.map.is_entity_blocked_up(self.player):
             # update player, send to server
             self.player.stats.y -= 1
-            self.player.sprite.set_direction(0)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
 
     def player_move_left(self):
+        self.player.sprite.set_direction(sprite.LEFT)
         if not self.map.is_entity_blocked_left(self.player):
             # update player, send to server
             self.player.stats.x -= 1
-            self.player.sprite.set_direction(2)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
 
     def player_move_right(self):
+        self.player.sprite.set_direction(sprite.RIGHT)
         if not self.map.is_entity_blocked_right(self.player):
             # update player, send to server
             self.player.stats.x += 1
-            self.player.sprite.set_direction(3)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
 
     def player_move_down(self):
+        self.player.sprite.set_direction(sprite.DOWN)
         if not self.map.is_entity_blocked_down(self.player):
             # update player, send to server
             self.player.stats.y += 1
-            self.player.sprite.set_direction(1)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
