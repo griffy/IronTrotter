@@ -13,6 +13,7 @@ def load_image(name):
 
 class Sprite(pygame.sprite.Sprite):
     def __init__(self, image_url, width=32, height=32, x=0, y=0):
+        pygame.sprite.Sprite.__init__(self)
         self.image_url = image_url
         self.image = load_image(image_url)
         self.width = width
