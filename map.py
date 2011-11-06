@@ -53,7 +53,7 @@ def _generate_living_entities_layer(terrain_layer, items_layer):
     entities_layer = MapLayer(width, height)
 
     # TODO: based this on the number of players
-    player_count = 3
+    player_count = 0
 
     for x in range(width):
         for y in range(height):

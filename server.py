@@ -32,7 +32,7 @@ class TrotterPub(protocol.Protocol):
             self.factory.glob.update(up)
 
             # send to all other clients
-            for t in self.transports:
+            for t in self.factory.transports:
                 if t is not self.transport:
                     self.transport.write(pickle.dumps(up,2))
 
