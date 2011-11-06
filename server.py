@@ -5,18 +5,32 @@ from update import Update
 import pickle
 
 import map
+import entity
 import pygame
 
 class TrotterPub(protocol.Protocol):
+    def __init__(self):
+        self.first = True
+
     def dataReceived(self, data):
         up = pickle.loads(data)
 
-        self.factory.glob.update(up)
+        #self.factory.glob.update(up)
 
-        # send to all other clients
-        for layer in self.factory.glob.map.layers:
-            for ent in layer.entities:
-                self.transport.write(pickle.dumps(ent.getUpdate(), 2))
+        if self.first == True:
+            self.first = False
+            for layer in self.factory.glob.map.layers:
+                for ent in layer.entities:
+                    self.transport.write(pickle.dumps(ent.getUpdate(), 2))
+
+            #generate a player
+            player = entity.Entity(Stats(0,0),0, "BOB")
+            self.factory.glob.update(player)
+
+            self.transport.write(pickle.dumps(player.getUpdate(),2))
+        else:
+            # send to all other clients
+            pass
 
 class MyFactory(protocol.Factory):
     def __init__(self, glob):

@@ -8,3 +8,4 @@ class Update:
 
         self.name = name
 
+nullUpdate = Update(0, 0, Stats(0,0,0))

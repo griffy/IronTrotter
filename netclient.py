@@ -5,7 +5,7 @@ from twisted.internet import reactor, protocol
 
 from stats import Stats
 
-from update import Update
+from update import Update, nullUpdate
 
 class TrotterSub(protocol.Protocol):
     #def __init__(self):
@@ -13,7 +13,7 @@ class TrotterSub(protocol.Protocol):
 
     def connectionMade(self):
         self.factory.transport = self.transport
-        self.transport.write(pickle.dumps(self.factory.handler.player.getUpdate(), 2))
+        self.transport.write(pickle.dumps(nullUpdate, 2))
 
     def dataReceived(self, data):
         stringIO = StringIO.StringIO(data)

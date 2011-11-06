@@ -42,13 +42,7 @@ class Handler:
 
         # create an empty map for the server to fill in at the lobby
         self.map = map.Map(10, 10)
-        # ditto for player
-        #self.player = None
-        # and viewport
-        #self.viewport = None
-
-        self.player = entity.Entity(Stats(0,0), entity.LIVING_ENTITIES[0], True, "Bob")
-        self.viewport = viewport.Viewport(self.player, 5, 5)
+        self.player = None
 
     def titleevent(self):
         global counter
@@ -136,12 +130,23 @@ class Handler:
         if update.idnum == 0:
             return
         entity = None
-        if is_living(update.enttype) or is_player(update.enttype):
+        if is_living(update.enttype):
             entity = self.map.layers[2].getById(update.idnum)
             if entity is None:
                 entity = Entity(update.stats, update.enttype,
                                        True, update.name, update.idnum)
                 self.map.layers[2].add(entity)
+
+        elif is_player(update.enttype):
+            entity = self.map.layers[2].getById(update.idnum)
+            if entity is None:
+                entity = Entity(update.stats, update.enttype,
+                                       True, update.name, update.idnum)
+                if self.player is None:
+                    self.player = entity
+                    self.viewport = viewport.Viewport(self.player, 5, 5)
+                self.map.layers[2].add(entity)
+
         elif is_item(update.enttype):
             entity = self.map.layers[1].getById(update.idnum)
             if entity is None:
