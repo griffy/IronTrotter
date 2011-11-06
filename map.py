@@ -26,7 +26,7 @@ def _generate_terrain_layer(width, height):
     maptype = random.randint(0,2)
     floor = 0
     if maptype == 2:
-       floor = random.randint(0,9)
+       floor = random.randint(0,8)
 
     for x in range(width):
         for y in range(height):
@@ -79,6 +79,9 @@ class MapLayer:
     def draw(self):
         self.group.draw(pygame.display.get_surface())
 
+    def update(self):
+        self.group.update()
+
     def add(self, entity):
         self.group.add(entity.sprite)
         self.entities.append(entity)
@@ -99,6 +102,9 @@ class Map:
     def draw(self):
         for layer in self.layers:
             layer.draw()
+
+    def update(self):
+        self.layers[2].update()
 
     def save(self):
         pass
