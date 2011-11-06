@@ -100,8 +100,12 @@ class MapLayer:
         return self.group.has(entity.sprite)
 
 class Map:
-    def __init__(self, width, height, layers):
+    def __init__(self, width, height, layers=None):
         self.layers = layers
+        if not layer:
+            self.layer = [MapLayer(width, height),
+                          MapLayer(width, height),
+                          MapLayer(width, height)]
 
     def draw(self):
         for layer in self.layers:
