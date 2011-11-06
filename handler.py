@@ -5,13 +5,14 @@ import sys
 from stats import Stats
 import pickle
 
-from netclient import TrotterSub
+from netclient import TrotterSubFactory
 
 from twisted.internet.task import LoopingCall
 
 import pygame
 import colors
 import map
+import entity
 import font
 import sound
 
@@ -22,8 +23,7 @@ class Handler:
 
         self.screen = screen
 
-        self.f = protocol.ClientFactory()
-        self.f.protocol = TrotterSub
+        self.f = TrotterSubFactory(self)
 
         self.fontDrawer = font.Font("font/youmurdererbb_reg.ttf", 100, colors.RED)
 
@@ -38,6 +38,8 @@ class Handler:
         self.lc.start(0.1)
 
         self.map = map.generate_map(10,10)
+
+        self.player = entity.Entity(Stats(0,0), entity.LIVING_ENTITIES[0], True, "Bob")
 
     def titleevent(self):
         global counter
@@ -97,3 +99,6 @@ class Handler:
     def gameevent(self):
        self.map.draw()
        pygame.display.flip()
+
+    def handleUpdates(self, update):
+        pass
