@@ -123,6 +123,8 @@ class Handler:
                     moved = self.player_move_down()
                 elif event.key == pygame.K_d:
                     moved = self.player_move_right()
+                elif event.key == pygame.K_SPACE:
+                    self.player_attack()
         if moved:
             self.viewport.update_view()
             self.pickup_item()
@@ -153,7 +155,7 @@ class Handler:
                 if self.player is None:
                     self.player = entity
                     self.hud = hud.HUD(self.player, 800, 600)
-                    self.viewport = viewport.Viewport(self.player, 14, 14)
+                    self.viewport = viewport.Viewport(self.player, 15, 15)
                 self.map.layers[2].add(entity)
 
         elif is_item(update.enttype):
@@ -178,6 +180,31 @@ class Handler:
             item.stats.hp = 0
             item.stats.score += scores.POTION
             self.f.transport.write(pickle.dumps(item.getUpdate()))
+
+    def player_attack(self):
+        direction = self.player.sprite.direction
+        x = self.player.stats.x
+        y = self.player.stats.y
+        if direction == sprite.LEFT:
+            if self.map.is_entity_blocked_left(self.player):
+                entity = self.map.get(x-1, y)
+                entity.hp -= 25
+                self.f.transport.write(pickle.dumps(entity.getUpdate()))
+        elif direction == sprite.RIGHT:
+            if self.map.is_entity_blocked_right(self.player):
+                entity = self.map.get(x+1, y)
+                entity.hp -= 25
+                self.f.transport.write(pickle.dumps(entity.getUpdate()))
+        elif direction == sprite.UP:
+            if self.map.is_entity_blocked_up(self.player):
+                entity = self.map.get(x, y-1)
+                entity.hp -= 25
+                self.f.transport.write(pickle.dumps(entity.getUpdate()))
+        elif direction == sprite.DOWN:
+            if self.map.is_entity_blocked_down(self.player):
+                entity = self.map.get(x, y+1)
+                entity.hp -= 25
+                self.f.transport.write(pickle.dumps(entity.getUpdate()))
 
     def player_quit_game(self):
         # set the player's health to 0 "killing" it
