@@ -37,8 +37,8 @@ class Handler:
     f = protocol.ClientFactory()
     f.protocol = TrotterSub
 
-    counter = 100
-    drawText = True
+    counter = 5
+    drawText = False
 
 
     def pyevent(self):
@@ -50,6 +50,8 @@ class Handler:
                 # --- KEY handlers go HERE ---
                 if event.key == pygame.K_m:
                     print "c"
+                elif event.key == pygame.K_RETURN:
+                    print "DO A THING"
                 elif event.key == pygame.K_x:
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
 
@@ -58,7 +60,7 @@ class Handler:
         self.screen.blit(self.title, self.titlerect)
         if self.counter == 0:
             self.drawText = not self.drawText
-            self.counter = 100
+            self.counter = 5
         self.counter -= 1
 
         if self.drawText:
