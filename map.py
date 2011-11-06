@@ -147,8 +147,8 @@ class Map:
     def item_under_entity(self, entity):
         for item in self.layers[1].entities:
             if item.stats.x == entity.stats.x and item.stats.y == entity.stats.y:
-                return True
-        return False
+                return item
+        return None
 
     def is_entity_blocked(self, new_x, new_y):
         terrain = self.layers[0].get(new_x, new_y)
