@@ -109,10 +109,12 @@ class MapLayer:
 class Map:
     def __init__(self, width, height, layers=None):
         self.layers = layers
+        self.player_list = []
         if not layers:
             self.layers = [MapLayer(width, height),
                            MapLayer(width, height),
                            MapLayer(width, height)]
+
 
     def draw(self):
         for layer in self.layers:
@@ -151,6 +153,30 @@ class Map:
             return True
         return False
 
+    def is_player_up(self, entity):
+        for player in self.player_list:
+            if player.stats.y < entity.stats.y:
+                return True
+        return False
+
+    def is_player_down(self,entity):
+        for player in self.player_list:
+            if player.stats.y > entity.stats.y:
+                return True            
+        return False
+
+    def is_player_left(self, entity):
+        for player in self.player_list:
+            if player.stats.x < entity.stats.y:
+                return True
+        return False
+
+    def is_player_right(self,entity):
+        for player in self.player_list:
+            if player.stats.x > entity.stats.y:
+                return True
+        return False
+
     def is_entity_blocked_up(self, entity):
         new_x = entity.stats.x
         new_y = entity.stats.y-1
@@ -181,3 +207,4 @@ class Map:
 
     def addPlayer(self, up):
         ent = Entity(up.stats,up.enttype,True,up.name,up.idnum)
+        player_list.append(ent)
