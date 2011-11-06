@@ -41,7 +41,7 @@ class Handler:
         self.lc.start(0.1)
 
         # create an empty map for the server to fill in at the lobby
-        self.map = map.Map(25, 20)
+        self.map = map.Map(10, 10)
         # ditto for player
         #self.player = None
         # and viewport
@@ -110,26 +110,28 @@ class Handler:
 
     def gameevent(self):
         # get user input and send to server
+        moved = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.player_quit_game()
                 reactor.stop()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w:
-                    self.player_move_up()
+                    moved = self.player_move_up()
                 elif event.key == pygame.K_a:
-                    self.player_move_left()
+                    moved =self.player_move_left()
                 elif event.key == pygame.K_s:
-                    self.player_move_down()
+                    moved = self.player_move_down()
                 elif event.key == pygame.K_d:
-                    self.player_move_right()
-        # get server updates
-        # apply them
-        # for update in updates: handleUpdate(update)
+                    moved = self.player_move_right()
+        if moved:
+            self.pickup_item()
+
         # draw updated
         self.map.draw_within(self.viewport)
         pygame.display.flip()
 
+    # called when we receive Updates from the server
     def handleUpdate(self, update):
         if update.idnum == 0:
             return
@@ -155,6 +157,13 @@ class Handler:
                 self.map.layers[0].add(entity)
         entity.stats = update.stats
 
+    def pickup_item(self):
+        item = self.map.item_under_entity(self.player)
+        if item:
+            item.stats.hp = 0
+            self.f.transport.write(pickle.dumps(item.getUpdate()))
+            # remove the item entity
+
     def player_quit_game(self):
         # set the player's health to 0 "killing" it
         # update the server
@@ -166,21 +175,29 @@ class Handler:
             # update player, send to server
             self.player.stats.y -= 1
             self.f.transport.write(pickle.dumps(self.player.getUpdate()))
+            return True
+        return False
 
     def player_move_left(self):
         if not self.map.is_entity_blocked_left(self.player):
             # update player, send to server
             self.player.stats.x -= 1
             self.f.transport.write(pickle.dumps(self.player.getUpdate()))
+            return True
+        return False
 
     def player_move_right(self):
         if not self.map.is_entity_blocked_right(self.player):
             # update player, send to server
             self.player.stats.x += 1
             self.f.transport.write(pickle.dumps(self.player.getUpdate()))
+            return True
+        return False
 
     def player_move_down(self):
         if not self.map.is_entity_blocked_down(self.player):
             # update player, send to server
             self.player.stats.y += 1
             self.f.transport.write(pickle.dumps(self.player.getUpdate()))
+            return True
+        return False

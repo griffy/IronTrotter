@@ -108,6 +108,8 @@ class MapLayer:
 
 class Map:
     def __init__(self, width, height, layers=None):
+        self.width = width
+        self.height = height
         self.layers = layers
         if not layers:
             self.layers = [MapLayer(width, height),
