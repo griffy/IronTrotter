@@ -13,7 +13,8 @@ import pygame
 import colors
 import map
 import entity
-from entity import is_boss, is_living, is_item, is_terrain
+from entity import Entity
+from entity import is_boss, is_living, is_player, is_item, is_terrain, is_solid_terrain
 import font
 import sound
 import viewport
@@ -40,11 +41,9 @@ class Handler:
         self.lc.start(0.1)
 
         # create an empty map for the server to fill in at the lobby
-        self.map = map.Map(800, 640)
-        # ditto for player
+        self.map = map.Map(25, 20)
+
         self.player = None
-        # and viewport
-        self.viewport = None
 
     def titleevent(self):
         global counter
@@ -127,17 +126,46 @@ class Handler:
         pygame.display.flip()
 
     def handleUpdate(self, update):
+        if update.idnum == 0:
+            return
         entity = None
-        if is_living(enttype) or name != "":
+        if is_living(update.enttype):
             entity = self.map.layers[2].getById(update.idnum)
-        elif is_item(enttype):
+            if entity is None:
+                entity = Entity(update.stats, update.enttype,
+                                       True, update.name, update.idnum)
+                self.map.layers[2].add(entity)
+
+        elif is_player(update.enttype):
+            entity = self.map.layers[2].getById(update.idnum)
+            if entity is None:
+                entity = Entity(update.stats, update.enttype,
+                                       True, update.name, update.idnum)
+                if self.player is None:
+                    self.player = entity
+                    self.viewport = viewport.Viewport(self.player, 5, 5)
+                self.map.layers[2].add(entity)
+
+        elif is_item(update.enttype):
             entity = self.map.layers[1].getById(update.idnum)
-        elif is_terrain(enttype):
+            if entity is None:
+                entity = Entity(update.stats, update.enttype,
+                                       False, update.name, update.idnum)
+                self.map.layers[1].add(entity)
+        elif is_terrain(update.enttype):
             entity = self.map.layers[0].getById(update.idnum)
-        entity.stat = stat
+            if entity is None:
+                entity = Entity(update.stats, update.enttype,
+                                       is_solid_terrain(update.enttype),
+                                       update.name, update.idnum)
+                self.map.layers[0].add(entity)
+        entity.stats = update.stats
 
     def player_quit_game(self):
-        pass
+        # set the player's health to 0 "killing" it
+        # update the server
+        self.player.stats.hp = 0
+        self.f.transport.write(pickle.dumps(self.player.getUpdate()))
 
     def player_move_up(self):
         if not self.map.is_entity_blocked_up(self.player):
