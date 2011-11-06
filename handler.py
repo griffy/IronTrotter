@@ -9,6 +9,7 @@ from netclient import TrotterSubFactory
 
 from twisted.internet.task import LoopingCall
 
+import random
 from random import choice
 
 import pygame
@@ -174,13 +175,24 @@ class Handler:
                 self.map.layers[0].add(entity)
         entity.stats = update.stats
 
+    def score_kill(self, entity):
+        if is_boss(entity):
+            self.player.stats.score += scores.BOSS
+        elif is_player(entity):
+            self.player.stats.score += scores.PLAYER
+        else:
+            self.player.stats.score += scores.GHOST
+
     def pickup_item(self):
         item = self.map.item_under_entity(self.player)
         if item:
             # set the hp to 0 to remove it in next map update
             item.stats.hp = 0
-            item.stats.score += scores.POTION
+            self.player.stats.score += scores.POTION
             self.f.transport.write(pickle.dumps(item.getUpdate(),2))
+            # give the player a hitpoint boost
+            self.player.stats.hp += random.randint(5, 25)
+            self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
 
     def player_attack(self):
         direction = self.player.sprite.direction
@@ -190,22 +202,30 @@ class Handler:
             if self.map.is_entity_blocked_left(self.player):
                 entity = self.map.layers[2].get(x-1, y)
                 entity.stats.hp -= 25
-                self.f.transport.write(pickle.dumps(entity.getUpdate()))
+                if entity.stats.hp <= 0:
+                    self.score_kill(entity)
+                self.f.transport.write(pickle.dumps(entity.getUpdate(),2))
         elif direction == sprite.RIGHT:
             if self.map.is_entity_blocked_right(self.player):
                 entity = self.map.layers[2].get(x+1, y)
                 entity.stats.hp -= 25
-                self.f.transport.write(pickle.dumps(entity.getUpdate()))
+                if entity.stats.hp <= 0:
+                    self.score_kill(entity)
+                self.f.transport.write(pickle.dumps(entity.getUpdate(),2))
         elif direction == sprite.UP:
             if self.map.is_entity_blocked_up(self.player):
                 entity = self.map.layers[2].get(x, y-1)
                 entity.stats.hp -= 25
-                self.f.transport.write(pickle.dumps(entity.getUpdate()))
+                if entity.stats.hp <= 0:
+                    self.score_kill(entity)
+                self.f.transport.write(pickle.dumps(entity.getUpdate(),2))
         elif direction == sprite.DOWN:
             if self.map.is_entity_blocked_down(self.player):
                 entity = self.map.layers[2].get(x, y+1)
                 entity.stats.hp -= 25
-                self.f.transport.write(pickle.dumps(entity.getUpdate()))
+                if entity.stats.hp <= 0:
+                    self.score_kill(entity)
+                self.f.transport.write(pickle.dumps(entity.getUpdate(),2))
 
     def player_quit_game(self):
         # set the player's health to 0 "killing" it
