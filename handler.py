@@ -153,7 +153,7 @@ class Handler:
                 if self.player is None:
                     self.player = entity
                     self.hud = hud.HUD(self.player, 800, 600)
-                    self.viewport = viewport.Viewport(self.player, 14, 14)
+                    self.viewport = viewport.Viewport(self.player, 15, 15)
                 self.map.layers[2].add(entity)
 
         elif is_item(update.enttype):
@@ -177,19 +177,19 @@ class Handler:
             # set the hp to 0 to remove it in next map update
             item.stats.hp = 0
             item.stats.score += scores.POTION
-            self.f.transport.write(pickle.dumps(item.getUpdate()))
+            self.f.transport.write(pickle.dumps(item.getUpdate(),2))
 
     def player_quit_game(self):
         # set the player's health to 0 "killing" it
         # update the server
         self.player.stats.hp = 0
-        self.f.transport.write(pickle.dumps(self.player.getUpdate()))
+        self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
 
     def player_move_up(self):
         if not self.map.is_entity_blocked_up(self.player):
             # update player, send to server
             self.player.stats.y -= 1
-            self.f.transport.write(pickle.dumps(self.player.getUpdate()))
+            self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
 
@@ -197,7 +197,7 @@ class Handler:
         if not self.map.is_entity_blocked_left(self.player):
             # update player, send to server
             self.player.stats.x -= 1
-            self.f.transport.write(pickle.dumps(self.player.getUpdate()))
+            self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
 
@@ -205,7 +205,7 @@ class Handler:
         if not self.map.is_entity_blocked_right(self.player):
             # update player, send to server
             self.player.stats.x += 1
-            self.f.transport.write(pickle.dumps(self.player.getUpdate()))
+            self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
 
@@ -213,6 +213,6 @@ class Handler:
         if not self.map.is_entity_blocked_down(self.player):
             # update player, send to server
             self.player.stats.y += 1
-            self.f.transport.write(pickle.dumps(self.player.getUpdate()))
+            self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
