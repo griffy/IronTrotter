@@ -13,14 +13,14 @@ def load_image(name):
     return image
 
 class Sprite(pygame.sprite.Sprite):
-    def __init__(self, image_url, width=32, height=32, x=0, y=0, animated=False):
+    def __init__(self, image_url, x, y, width=32, height=32, animated=False):
         pygame.sprite.Sprite.__init__(self)
         self.image_url = image_url
         self.image = load_image(image_url)
         self.width = width
         self.height = height
         self.rect = self.image.get_rect()
-        self.rect.center = (x,y)
+        self.rect.topleft = (x*32,y*32)
         self.animated = animated
 
         if animated:
