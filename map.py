@@ -1,3 +1,4 @@
+import random
 import pygame
 from entity import generate_item_entity
 from entity import generate_living_entity
@@ -23,6 +24,8 @@ def _generate_terrain_layer(width, height):
     return terrain_layer
 
 def _generate_items_layer(terrain_layer):
+    width = terrain_layer.width
+    height = terrain_layer.height
     items_layer = MapLayer(width, height)
     for x in range(width):
         for y in range(height):
@@ -33,6 +36,8 @@ def _generate_items_layer(terrain_layer):
     return items_layer
 
 def _generate_living_entities_layer(terrain_layer, items_layer):
+    width = terrain_layer.width
+    height = terrain_layer.height
     entities_layer = MapLayer(width, height)
     for x in range(width):
         for y in range(height):
@@ -48,6 +53,7 @@ class MapLayer:
         self.width = width
         self.height = height
         self.group = pygame.sprite.Group()
+        self.entities = []
         if map_url:
             self.load(map_url)
 
@@ -56,10 +62,11 @@ class MapLayer:
 
     def add(self, entity):
         self.group.add(entity.sprite)
+        self.entities.append(entity)
 
     def get(self, x, y):
-        for entity in group:
-            if entity.sprite.rect.center == (x,y):
+        for entity in self.entities:
+            if entity.stats.x == x and entity.stats.y == y:
                 return entity
         return None
 
@@ -71,7 +78,7 @@ class Map:
         self.layers = layers
 
     def draw(self):
-        for layer in layers:
+        for layer in self.layers:
             layer.draw()
 
     def save(self):
