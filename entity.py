@@ -122,15 +122,17 @@ ITEMS = [
 ]
 
 LIVING_ENTITIES = [
-    SHEEP,
-    BOSS1,
-    BOSS2,
-    BOSS3,
-    BOSS4,
     GHOST1,
     GHOST2,
     GHOST3,
     GHOST4,
+]
+
+BOSS_ENTITIES = [
+    BOSS1,
+    BOSS2,
+    BOSS3,
+    BOSS4
 ]
 
 def generate_terrain_entity(x, y, maptype, floor):
@@ -165,6 +167,9 @@ def generate_living_entity(x, y):
     stats = Stats(x, y)
     solid = True
     return Entity(stats, ent_type, solid)
+
+def generate_player_entity(x, y):
+    return Entity(Stats(x, y), SHEEP, True)
 
 class Entity:
     count = 0

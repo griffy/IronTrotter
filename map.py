@@ -3,6 +3,7 @@ import pygame
 from entity import generate_item_entity
 from entity import generate_living_entity
 from entity import generate_terrain_entity
+from entity import generate_player_entity
 
 def makeMapFromFile(url):
     pass
@@ -49,12 +50,20 @@ def _generate_living_entities_layer(terrain_layer, items_layer):
     width = terrain_layer.width
     height = terrain_layer.height
     entities_layer = MapLayer(width, height)
+
+    # TODO: based this on the number of players
+    player_count = 3
+
     for x in range(width):
         for y in range(height):
             if not items_layer.get(x, y) and not terrain_layer.get(x, y).solid:
                 if random.randint(1, 10) == 1:
                     entity = generate_living_entity(x, y)
                     entities_layer.add(entity)
+                elif random.randint(1, 10) == 1 and player_count > 0:
+                    entity = generate_player_entity(x, y)
+                    entities_layer.add(entity)
+                    player_count -= 1
     return entities_layer
 
 
