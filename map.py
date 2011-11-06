@@ -20,9 +20,16 @@ def generate_map(width, height):
 
 def _generate_terrain_layer(width, height):
     terrain_layer = MapLayer(width, height)
+   
+    # figure out the map and floor tiles that we will be using
+    maptype = random.randint(0,2)
+    floor = 0
+    if maptype == 2:
+       floor = random.randint(0,9)
+
     for x in range(width):
         for y in range(height):
-            entity = generate_terrain_entity(x, y)
+            entity = generate_terrain_entity(x, y, maptype, floor)
             terrain_layer.add(entity)
     return terrain_layer
 
