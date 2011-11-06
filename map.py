@@ -63,6 +63,13 @@ class MapLayer:
     def draw(self):
         self.group.draw(pygame.display.get_surface())
 
+    def draw(self, viewport):
+        visible_group = pygame.sprite.Group()
+        for entity in self.entities:
+            if viewport.within_view(entity):
+                visible_group.add(entity.sprite)
+        self.visible_group.draw(pygame.display.get_surface())
+
     def add(self, entity):
         self.group.add(entity.sprite)
         self.entities.append(entity)
