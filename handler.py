@@ -61,7 +61,7 @@ class Handler:
         self.gameMusic = pygame.mixer.Sound("music/"+choice(musics))
         self.attackSound = pygame.mixer.Sound("sounds/erdie__sword01.wav")
         self.ghastlySound = pygame.mixer.Sound("sounds/johnc__moan.wav")
-        self.hurtSound = pygame.mixer.Sound("sounds/halleck__jacobsladdersingle2.mp3")
+        self.hurtSound = pygame.mixer.Sound("sounds/wolfsinger__weirdbreath.wav")
 
         self.lc = LoopingCall(self.titleevent)
         self.lc.start(0.1)

@@ -16,11 +16,11 @@ def makeMapFromFile(url):
 
 # width and height are in tiles
 def generate_map(width, height):
-    print "begin generate terrain"
+    print "generating terrain"
     terrain_layer = _generate_terrain_layer(width, height)
-    print "being generate items"
+    print "generating items"
     items_layer = _generate_items_layer(terrain_layer)
-    print "begin generate entities"
+    print "generating entities"
     entities_layer = _generate_living_entities_layer(terrain_layer,
                                                      items_layer)
     return Map(width, height, [terrain_layer, items_layer, entities_layer])
