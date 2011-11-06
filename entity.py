@@ -1,6 +1,7 @@
 import random
 from sprite import Sprite
 from stats import Stats
+from update import Update
 
 TYPES = [
     "sprites/sheepRight.png",
@@ -173,7 +174,7 @@ def generate_player_entity(x, y):
 
 class Entity:
     count = 0
-    def __init__(self, stats, ent_type, solid, id_num=None):
+    def __init__(self, stats, ent_type, solid, name = "", id_num=None):
         if not id_num:
             self.id_num = Entity.count
             Entity.count += 1
@@ -183,3 +184,7 @@ class Entity:
         self.ent_type = ent_type
         self.sprite = Sprite(TYPES[self.ent_type], stats.x, stats.y)
         self.solid = solid
+        self.name = name
+
+    def getUpdate(self):
+        return Update(self.id_num, self.ent_type, self.stats, self.name)
