@@ -18,7 +18,6 @@ class HUD:
     def draw(self):
         # TODO: Actually replace with the map name if there is one,
         #       otherwise just leave the title
-        self.heading_font.draw(self.width/2-35, 25, "Iron Trotter - Map 1")
-        self.stats_font.draw(self.width-50, 30, "X: " + str(self.player.stats.x))
-        self.stats_font.draw(self.width-50, 60, "Y: " + str(self.player.stats.y))
-        self.stats_font.draw(self.width-50, 90, "HP: " + str(self.player.stats.hp))
+        self.heading_font.draw(self.width/2-35, 25, "Iron Trotter")
+        self.stats_font.draw(self.width-50, 30, "HP: " + str(self.player.stats.hp))
+        self.stats_font.draw(self.width-50, 80, "Score: " + str(self.player.stats.score))

@@ -20,6 +20,7 @@ from entity import is_boss, is_living, is_player, is_item, is_terrain, is_solid_
 import font
 import sound
 import viewport
+import scores
 
 class Handler:
     def __init__(self, screen):
@@ -197,9 +198,10 @@ class Handler:
     def pickup_item(self):
         item = self.map.item_under_entity(self.player)
         if item:
+            # set the hp to 0 to remove it in next map update
             item.stats.hp = 0
+            item.stats.score += scores.POTION
             self.f.transport.write(pickle.dumps(item.getUpdate()))
-            # remove the item entity
 
     def player_quit_game(self):
         # set the player's health to 0 "killing" it
