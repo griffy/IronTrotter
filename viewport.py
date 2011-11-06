@@ -1,5 +1,6 @@
 import pygame
 
+# TODO: a position relative to the screen, ie the viewport is centered
 class Viewport:
     # width and height is in tiles
     def __init__(self, player, width, height):
