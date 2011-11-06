@@ -110,34 +110,34 @@ LIVING_ENTITIES = [
 ]
 
 def generate_terrain_entity(x, y):
-    type = TERRAIN[random.randint(0, len(TERRAIN)-1)]
+    ent_type = TERRAIN[random.randint(0, len(TERRAIN)-1)]
     stats = Stats(x, y)
     solid = False
-    if type in SOLID_TERRAIN:
+    if ent_type in SOLID_TERRAIN:
         solid = True
-    return Entity(stats, type, solid)
+    return Entity(stats, ent_type, solid)
 
 def generate_item_entity(x, y):
-    type = ITEMS[random.randint(0, len(ITEMS)-1)]
+    ent_type = ITEMS[random.randint(0, len(ITEMS)-1)]
     stats = Stats(x, y)
     solid = False
-    return Entity(stats, type, solid)
+    return Entity(stats, ent_type, solid)
 
 def generate_living_entity(x, y):
-    type = LIVING_ENTITIES[random.randint(0, len(LIVING_ENTITIES)-1)]
+    ent_type = LIVING_ENTITIES[random.randint(0, len(LIVING_ENTITIES)-1)]
     stats = Stats(x, y)
     solid = True
-    return Entity(stats, type, solid)
+    return Entity(stats, ent_type, solid)
 
 class Entity:
     count = 0
-    def __init__(self, stats, type, solid, id=None):
-        if not id:
-            self.id = Entity.count
+    def __init__(self, stats, ent_type, solid, id_num=None):
+        if not id_num:
+            self.id_num = Entity.count
             Entity.count += 1
         else:
-            self.id = id
+            self.id_num = id_num
         self.stats = stats
-        self.type = type
-        self.sprite = Sprite(TYPES[self.type])
+        self.ent_type = ent_type
+        self.sprite = Sprite(TYPES[self.ent_type])
         self.solid = solid
