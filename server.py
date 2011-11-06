@@ -55,7 +55,7 @@ class MyFactory(protocol.Factory):
 
 class ServerGlobals:
     def __init__(self):
-        self.map = map.generate_map(10,10)
+        self.map = map.generate_map(map.map_width,map.map_height)
 
     def update(self, up):
         if up.name != "":

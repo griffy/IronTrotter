@@ -6,6 +6,9 @@ from entity import generate_terrain_entity
 from entity import generate_player_entity
 from entity import Entity
 
+map_height = 16
+map_width = 16
+
 def makeMapFromFile(url):
     pass
 
@@ -27,7 +30,7 @@ def _generate_terrain_layer(width, height):
     maptype = random.randint(0,2)
     floor = 0
     if maptype == 2:
-       floor = random.randint(0,9)
+       floor = random.randint(0,8)
 
     for x in range(width):
         for y in range(height):
@@ -53,7 +56,7 @@ def _generate_living_entities_layer(terrain_layer, items_layer):
     entities_layer = MapLayer(width, height)
 
     # TODO: based this on the number of players
-    player_count = 3
+    player_count = 0
 
     for x in range(width):
         for y in range(height):
@@ -77,13 +80,13 @@ class MapLayer:
         if map_url:
             self.load(map_url)
 
-    def update(self):
+    def update(self, viewport):
         to_kill = []
         for i, entity in enumerate(self.entities):
             if entity.stats.hp == 0:
                 to_kill.append(i)
             else:
-                entity.update()
+                entity.update(viewport)
         to_kill.reverse()
         for i in to_kill:
             self.entities[i].sprite.kill()
@@ -129,9 +132,9 @@ class Map:
                            MapLayer(width, height),
                            MapLayer(width, height)]
 
-    def update(self):
+    def update(self, viewport):
         for layer in self.layers:
-            layer.update()
+            layer.update(viewport)
 
     def draw(self):
         for layer in self.layers:
@@ -217,14 +220,14 @@ class Map:
     def is_entity_blocked_right(self, entity):
         new_x = entity.stats.x+1
         new_y = entity.stats.y
-        if new_x > self.width:
+        if new_x >= self.width:
             return True
         return self.is_entity_blocked(new_x, new_y)
 
     def is_entity_blocked_down(self, entity):
         new_x = entity.stats.x
         new_y = entity.stats.y+1
-        if new_y > self.height:
+        if new_y >= self.height:
             return True
         return self.is_entity_blocked(new_x, new_y)
 

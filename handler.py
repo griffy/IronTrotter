@@ -44,7 +44,7 @@ class Handler:
         self.lc.start(0.1)
 
         # create an empty map for the server to fill in at the lobby
-        self.map = map.Map(10, 10)
+        self.map = map.Map(map.map_width, map.map_height)
         self.player = None
 
     def titleevent(self):
@@ -122,9 +122,10 @@ class Handler:
                 elif event.key == pygame.K_d:
                     moved = self.player_move_right()
         if moved:
+            self.viewport.update_view()
             self.pickup_item()
 
-        self.map.update()
+        self.map.update(self.viewport)
         # draw updated
         self.map.draw_within(self.viewport)
         pygame.display.flip()
@@ -177,7 +178,7 @@ class Handler:
                                        True, update.name, update.idnum)
                 if self.player is None:
                     self.player = entity
-                    self.viewport = viewport.Viewport(self.player, 5, 5)
+                    self.viewport = viewport.Viewport(self.player, 14, 14)
                 self.map.layers[2].add(entity)
 
         elif is_item(update.enttype):

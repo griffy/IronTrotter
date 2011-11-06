@@ -32,8 +32,8 @@ class Sprite(pygame.sprite.Sprite):
             self.image = self.images[0]
             self.frame = 0
 
-    def update(self, stats):
-        self.rect.topleft = (stats.x*32, stats.y*32)
+    def update(self, stats, viewport):
+        self.rect.topleft = (stats.x*32 - (viewport.x_offset*32), stats.y*32 - (viewport.y_offset*32))
         #self.rect.topleft = (self.rect.x + (random.randint(0,1) * -1) * 1, self.rect.y + (random.randint(0,1) * -1) * 1)
         if self.animated:
             self.frame = (self.frame + 1) % (len(self.images) - 1)
