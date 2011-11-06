@@ -32,7 +32,14 @@ TYPES = [
     "tiles/redWoodLeftRight.png",
     "tiles/redWoodUpDown.png",
     "tiles/woodLeftRight.png",
-    "tiles/woodUpDown.png",
+    "tiles/woodUpDown.png"
+]
+
+SHEEP_SPRITES = [
+    "sprites/sheepUp.png",
+    "sprites/sheepDown.png",
+    "sprites/sheepLeft.png",
+    "sprites/sheepRight.png"
 ]
 
 SHEEP = 0
@@ -217,7 +224,10 @@ class Entity:
             self.id_num = id_num
         self.stats = stats
         self.ent_type = ent_type
-        self.sprite = Sprite(TYPES[self.ent_type], stats.x, stats.y)
+        if ent_type == SHEEP:
+                self.sprite = Sprite(TYPES[self.ent_type], stats.x, stats.y, 32, 32, False, 3, SHEEP_SPRITES)
+        else:
+            self.sprite = Sprite(TYPES[self.ent_type], stats.x, stats.y)
         self.solid = solid
         self.name = name
 

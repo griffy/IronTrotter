@@ -115,13 +115,13 @@ class Handler:
                 self.player_quit_game()
                 reactor.stop()
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w:
+                if event.key == pygame.K_w or event.key == pygame.K_k:
                     moved = self.player_move_up()
-                elif event.key == pygame.K_a:
+                elif event.key == pygame.K_a or event.key == pygame.K_h:
                     moved = self.player_move_left()
-                elif event.key == pygame.K_s:
+                elif event.key == pygame.K_s or event.key == pygame.K_j:
                     moved = self.player_move_down()
-                elif event.key == pygame.K_d:
+                elif event.key == pygame.K_d or event.key == pygame.K_l:
                     moved = self.player_move_right()
         if moved:
             self.viewport.update_view()
@@ -189,6 +189,7 @@ class Handler:
         if not self.map.is_entity_blocked_up(self.player):
             # update player, send to server
             self.player.stats.y -= 1
+            self.player.sprite.set_direction(0)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
@@ -197,6 +198,7 @@ class Handler:
         if not self.map.is_entity_blocked_left(self.player):
             # update player, send to server
             self.player.stats.x -= 1
+            self.player.sprite.set_direction(2)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
@@ -205,6 +207,7 @@ class Handler:
         if not self.map.is_entity_blocked_right(self.player):
             # update player, send to server
             self.player.stats.x += 1
+            self.player.sprite.set_direction(3)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
@@ -213,6 +216,7 @@ class Handler:
         if not self.map.is_entity_blocked_down(self.player):
             # update player, send to server
             self.player.stats.y += 1
+            self.player.sprite.set_direction(1)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
