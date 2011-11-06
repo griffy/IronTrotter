@@ -13,6 +13,7 @@ import pygame
 import colors
 import map
 import entity
+from entity import is_boss, is_living, is_item, is_terrain
 import font
 import sound
 import viewport
@@ -38,9 +39,12 @@ class Handler:
         self.lc = LoopingCall(self.titleevent)
         self.lc.start(0.1)
 
-        self.map = map.generate_map(10,10)
-        self.player = entity.Entity(Stats(0,0), entity.LIVING_ENTITIES[0], True, "Bob")
-        self.viewport = viewport.Viewport(self.player, 5, 5)
+        # create an empty map for the server to fill in at the lobby
+        self.map = map.Map(800, 640)
+        # ditto for player
+        self.player = None
+        # and viewport
+        self.viewport = None
 
     def titleevent(self):
         global counter
@@ -73,6 +77,9 @@ class Handler:
         pygame.display.flip()
 
     def lobbyevent(self):
+        # TODO: the below should be set after the server responds with updates
+        #self.player = entity.Entity(Stats(0,0), entity.LIVING_ENTITIES[0], True, "Bob")
+        #self.viewport = viewport.Viewport(self.player, 5, 5)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 reactor.stop()
@@ -98,8 +105,60 @@ class Handler:
         pygame.display.flip()
 
     def gameevent(self):
-       self.map.draw_within(self.viewport)
-       pygame.display.flip()
+        # get user input and send to server
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.player_quit_game()
+                reactor.stop()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_w:
+                    self.player_move_up()
+                elif event.key == pygame.K_a:
+                    self.player_move_left()
+                elif event.key == pygame.K_s:
+                    self.player_move_down()
+                elif event.key == pygame.K_d:
+                    self.player_move_right()
+        # get server updates
+        # apply them
+        # for update in updates: handleUpdate(update)
+        # draw updated
+        self.map.draw_within(self.viewport)
+        pygame.display.flip()
 
-    def handleUpdates(self, update):
+    def handleUpdate(self, update):
+        entity = None
+        if is_living(enttype) or name != "":
+            entity = self.map.layers[2].getById(update.idnum)
+        elif is_item(enttype):
+            entity = self.map.layers[1].getById(update.idnum)
+        elif is_terrain(enttype):
+            entity = self.map.layers[0].getById(update.idnum)
+        entity.stat = stat
+
+    def player_quit_game(self):
         pass
+
+    def player_move_up(self):
+        if not self.map.is_entity_blocked_up(self.player):
+            # update player, send to server
+            self.player.stats.y -= 1
+            self.f.transport.write(pickle.dumps(self.player.getUpdate()))
+
+    def player_move_left(self):
+        if not self.map.is_entity_blocked_left(self.player):
+            # update player, send to server
+            self.player.stats.x -= 1
+            self.f.transport.write(pickle.dumps(self.player.getUpdate()))
+
+    def player_move_right(self):
+        if not self.map.is_entity_blocked_right(self.player):
+            # update player, send to server
+            self.player.stats.x += 1
+            self.f.transport.write(pickle.dumps(self.player.getUpdate()))
+
+    def player_move_down(self):
+        if not self.map.is_entity_blocked_down(self.player):
+            # update player, send to server
+            self.player.stats.y += 1
+            self.f.transport.write(pickle.dumps(self.player.getUpdate()))
