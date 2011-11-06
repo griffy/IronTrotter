@@ -123,6 +123,7 @@ class Handler:
         if moved:
             self.pickup_item()
 
+        self.map.update()
         # draw updated
         self.map.draw_within(self.viewport)
         pygame.display.flip()
@@ -148,14 +149,14 @@ class Handler:
                 moves.append("left")
             if self.map.is_player_right(entity):
                 moves.append("right")
-            
+
             if not moves:
                 move = choice(["up", "down", "left", "right"])
             else:
                 move = choice(moves)
 
             if move == "up":
-                if not self.map.is_entity_blocked_up(entity): 
+                if not self.map.is_entity_blocked_up(entity):
                     entity.stats.y -= 1
             elif move == "down":
                 if not self.map.is_entity_blocked_down(entity):
@@ -166,8 +167,8 @@ class Handler:
             else:
                 if not self.map.is_entity_blocked_right(entity):
                     entity.stats.x += 1
-            
-            
+
+
         elif is_player(update.enttype):
             entity = self.map.layers[2].getById(update.idnum)
             if entity is None:
