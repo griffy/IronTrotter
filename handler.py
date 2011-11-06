@@ -230,6 +230,7 @@ class Handler:
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
 
     def player_attack(self):
+        self.player.sprite.do_animate()
         direction = self.player.sprite.direction
         x = self.player.stats.x
         y = self.player.stats.y

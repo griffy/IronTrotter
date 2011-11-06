@@ -39,7 +39,11 @@ SHEEP_SPRITES = [
     "sprites/sheepUp.png",
     "sprites/sheepDown.png",
     "sprites/sheepLeft.png",
-    "sprites/sheepRight.png"
+    "sprites/sheepRight.png",
+    "sprites/sheepUpAttack.png",
+    "sprites/sheepDownAttack.png",
+    "sprites/sheepLeftAttack.png",
+    "sprites/sheepRightAttack.png"
 ]
 
 GHOST1_SPRITES = [
