@@ -96,6 +96,12 @@ class MapLayer:
                 return entity
         return None
 
+    def getById(self, id_num):
+        for entity in self.entities:
+            if entity.id_num == id_num:
+                return entity
+        return None
+
     def has(self, entity):
         return self.group.has(entity.sprite)
 
@@ -120,3 +126,19 @@ class Map:
 
     def load(self, url):
         pass
+
+    def get(self, x, y):
+        for layer in self.layers:
+            ent = layer.get(x, y)
+            if ent != None:
+                return ent
+
+    def getById(self, id_num):
+        for layer in self.layers:
+            ent = layer.getById(id_num)
+            if ent != None:
+                return ent
+
+
+    def addPlayer(self, up):
+        ent = Entity(up.stats,up.enttype,True,up.name,up.idnum)
