@@ -32,7 +32,7 @@ class Sprite(pygame.sprite.Sprite):
             self.frame = 0
 
     def update(self):
-        self.rect.topleft = (self.rect.x + 1, self.rect.y + 1)
+        self.rect.topleft = (self.rect.x + (random.randint(0,1) * -1) * 1, self.rect.y + (random.randint(0,1) * -1) * 1)
         if self.animated:
             self.frame = (self.frame + 1) % (len(self.images) - 1)
             self.image = self.images[self.frame]           
