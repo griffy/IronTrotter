@@ -22,6 +22,7 @@ import sound
 import viewport
 import scores
 import hud
+import sprite
 
 class Handler:
     def __init__(self, screen):
@@ -187,23 +188,23 @@ class Handler:
         y = self.player.stats.y
         if direction == sprite.LEFT:
             if self.map.is_entity_blocked_left(self.player):
-                entity = self.map.get(x-1, y)
-                entity.hp -= 25
+                entity = self.map.layers[2].get(x-1, y)
+                entity.stats.hp -= 25
                 self.f.transport.write(pickle.dumps(entity.getUpdate()))
         elif direction == sprite.RIGHT:
             if self.map.is_entity_blocked_right(self.player):
-                entity = self.map.get(x+1, y)
-                entity.hp -= 25
+                entity = self.map.layers[2].get(x+1, y)
+                entity.stats.hp -= 25
                 self.f.transport.write(pickle.dumps(entity.getUpdate()))
         elif direction == sprite.UP:
             if self.map.is_entity_blocked_up(self.player):
-                entity = self.map.get(x, y-1)
-                entity.hp -= 25
+                entity = self.map.layers[2].get(x, y-1)
+                entity.stats.hp -= 25
                 self.f.transport.write(pickle.dumps(entity.getUpdate()))
         elif direction == sprite.DOWN:
             if self.map.is_entity_blocked_down(self.player):
-                entity = self.map.get(x, y+1)
-                entity.hp -= 25
+                entity = self.map.layers[2].get(x, y+1)
+                entity.stats.hp -= 25
                 self.f.transport.write(pickle.dumps(entity.getUpdate()))
 
     def player_quit_game(self):
