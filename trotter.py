@@ -50,6 +50,8 @@ class Handler:
                 # --- KEY handlers go HERE ---
                 if event.key == pygame.K_m:
                     print "c"
+                elif event.key == pygame.K_RETURN:
+                    print "DO A THING"
                 elif event.key == pygame.K_x:
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
 
