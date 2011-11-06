@@ -10,7 +10,7 @@ from twisted.internet.task import LoopingCall
 import pygame
 import colors
 import map
-
+import font
 
 class TrotterSub(protocol.Protocol):
     """Once connected, send a message, then print the result."""
@@ -39,27 +39,36 @@ def main():
     pygame.display.set_caption("Iron Trotter")
     title = pygame.image.load("images/titleScreen.png")
     titlerect = title.get_rect()
-
-    mapthing = map.generate_map(1000,1000)
+    fontDrawer = font.Font("font/youmurdererbb_reg.ttf", 100, colors.RED)
 
     f = protocol.ClientFactory()
     f.protocol = TrotterSub
+    
+    counter = 100
+    drawText = True
 
     def pyevent():
+        global counter
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 reactor.stop()
-                #sys.exit()
             elif event.type == pygame.KEYDOWN:
                 # --- KEY handlers go HERE ---
                 if event.key == pygame.K_m:
                     print "c"
                 elif event.key == pygame.K_x:
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
-        mapthing.draw()
-        #screen.blit(title, titlerect)
-        pygame.display.flip()
+        screen.blit(title, titlerect)
+        if counter == 0:
+            drawText = not drawText
+            counter = 100
+        counter -= 1
 
+        if drawText:
+            fontDrawer.draw(400,450, "PRESS ENTER TO START")
+        
+        pygame.display.flip()
+       
 
     lc = LoopingCall(pyevent)
     lc.start(0.1)
