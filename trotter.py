@@ -1,6 +1,6 @@
 from twisted.internet import reactor, protocol
 
-from sys import argv
+import sys
 
 from stats import Stats
 import pickle
@@ -50,7 +50,7 @@ titlerect = title.get_rect()
 # this connects the protocol to a server runing on port 8000
 def main():
     addr = "localhost"
-    if len(argv) > 1:
+    if len(sys.argv) > 1:
         addr = argv[1]
 
     lc = LoopingCall(pyevent)
