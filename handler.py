@@ -14,6 +14,7 @@ import colors
 import map
 import font
 import sound
+import sprite
 
 class Handler:
     def __init__(self, screen):
@@ -51,7 +52,6 @@ class Handler:
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
 
         fontDrawer = font.Font("font/youmurdererbb_reg.ttf", 100, colors.RED)
-
         self.screen.blit(self.title, self.titlerect)
         if self.counter == 0:
             self.drawText = not self.drawText
