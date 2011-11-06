@@ -69,6 +69,7 @@ class Handler:
                 elif event.key == pygame.K_x:
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
 
+        self.screen.fill(colors.BLACK)
         self.screen.blit(self.title, self.titlerect)
         if self.counter == 0:
             self.drawText = not self.drawText
@@ -81,9 +82,6 @@ class Handler:
         pygame.display.flip()
 
     def lobbyevent(self):
-        # TODO: the below should be set after the server responds with updates
-        #self.player = entity.Entity(Stats(0,0), entity.LIVING_ENTITIES[0], True, "Bob")
-        #self.viewport = viewport.Viewport(self.player, 5, 5)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 reactor.stop()
@@ -97,6 +95,7 @@ class Handler:
                 elif event.key == pygame.K_x:
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
 
+        self.screen.fill(colors.BLACK)
         self.screen.blit(self.title, self.titlerect)
         if self.counter == 0:
             self.drawText = not self.drawText
@@ -132,6 +131,7 @@ class Handler:
 
         self.map.update(self.viewport)
         # draw updated
+        self.screen.fill(colors.BLACK)
         self.map.draw_within(self.viewport)
         self.hud.draw()
         pygame.display.flip()
