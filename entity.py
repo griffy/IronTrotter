@@ -1,9 +1,11 @@
-import stats
+import random
+from sprite import Sprite
+from stats import Stats
 
 TYPES = [
-    "char.png",
-    "grass.png",
-    "wood.png"
+    "sprites/char.png",
+    "tiles/grass.png",
+    #"tiles/wood.png"
 ]
 
 CHAR = 0
@@ -12,27 +14,47 @@ WOOD = 2
 
 TERRAIN = [
     GRASS,
-    WOOD
+    #WOOD
 ]
 
-entity_count = 0
+SOLID_TERRAIN = { WOOD }
 
-def generate_entity(x, y):
-    type = random.randint(len(TYPES))
-    id = entity_count
-    entity_count += 1
-    stats = stats.Stats(x, y)
+ITEMS = [
+
+]
+
+LIVING_ENTITIES = [
+    CHAR
+]
 
 def generate_terrain_entity(x, y):
-    type = random.randint(0, len(TERRAIN))
-    id = entity_count
-    entity_count += 1
-    stats = stats.Stats(x, y)
+    type = TERRAIN[random.randint(0, len(TERRAIN)-1)]
+    stats = Stats(x, y)
+    solid = False
+    if type in SOLID_TERRAIN:
+        solid = True
+    return Entity(stats, type, solid)
+
+def generate_item_entity(x, y):
+    type = ITEMS[random.randint(0, len(ITEMS)-1)]
+    stats = Stats(x, y)
+    solid = False
+    return Entity(stats, type, solid)
+
+def generate_living_entity(x, y):
+    type = LIVING_ENTITIES[random.randint(0, len(LIVING_ENTITIES)-1)]
+    stats = Stats(x, y)
+    solid = True
+    return Entity(stats, type, solid)
 
 class Entity:
     count = 0
-    def __init__(self, id, stats, type, solid=False):
-        self.id = id
+    def __init__(self, stats, type, solid, id=None):
+        if not id:
+            self.id = Entity.count
+            Entity.count += 1
+        else:
+            self.id = id
         self.stats = stats
         self.type = type
         self.sprite = Sprite(TYPES[self.type])
