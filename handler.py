@@ -145,7 +145,6 @@ class Handler:
                 elif event.key == pygame.K_d or event.key == pygame.K_l:
                     moved = self.player_move_right()
                 elif event.key == pygame.K_SPACE:
-                    self.attackSound.play()
                     self.player_attack()
         if moved:
             self.viewport.update_view()
@@ -238,6 +237,7 @@ class Handler:
             if self.map.is_entity_blocked_left(self.player):
                 entity = self.map.layers[2].get(x-1, y)
                 if entity:
+                    self.attackSound.play()
                     entity.stats.hp -= 25
                     if entity.stats.hp <= 0:
                         self.score_kill(entity)
@@ -246,6 +246,7 @@ class Handler:
             if self.map.is_entity_blocked_right(self.player):
                 entity = self.map.layers[2].get(x+1, y)
                 if entity:
+                    self.attackSound.play()
                     entity.stats.hp -= 25
                     if entity.stats.hp <= 0:
                         self.score_kill(entity)
@@ -254,6 +255,7 @@ class Handler:
             if self.map.is_entity_blocked_up(self.player):
                 entity = self.map.layers[2].get(x, y-1)
                 if entity:
+                    self.attackSound.play()
                     entity.stats.hp -= 25
                     if entity.stats.hp <= 0:
                         self.score_kill(entity)
@@ -262,6 +264,7 @@ class Handler:
             if self.map.is_entity_blocked_down(self.player):
                 entity = self.map.layers[2].get(x, y+1)
                 if entity:
+                    self.attackSound.play()
                     entity.stats.hp -= 25
                     if entity.stats.hp <= 0:
                         self.score_kill(entity)

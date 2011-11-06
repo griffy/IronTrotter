@@ -10,6 +10,7 @@ from entity import is_living
 map_height = 16
 map_width = 16
 
+
 def makeMapFromFile(url):
     pass
 
