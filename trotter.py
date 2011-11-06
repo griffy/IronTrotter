@@ -11,6 +11,7 @@ import pygame
 import colors
 import map
 import font
+import sound
 
 class TrotterSub(protocol.Protocol):
     """Once connected, send a message, then print the result."""
@@ -27,27 +28,24 @@ class TrotterSub(protocol.Protocol):
         print "connection lost"
 
 
-# this connects the protocol to a server runing on port 8000
-def main():
-    addr = "localhost"
-    if len(sys.argv) > 1:
-        addr = sys.argv[1]
-
-    pygame.init()
-    width, height = 800, 600
-    screen = pygame.display.set_mode((width, height))
-    pygame.display.set_caption("Iron Trotter")
+class Handler:
     title = pygame.image.load("images/titleScreen.png")
     titlerect = title.get_rect()
-    fontDrawer = font.Font("font/youmurdererbb_reg.ttf", 100, colors.RED)
+
+    width, height = 800, 600
+    screen = pygame.display.set_mode((width, height))
 
     f = protocol.ClientFactory()
     f.protocol = TrotterSub
-    
-    counter = 100
-    drawText = True
 
-    def pyevent():
+    counter = 5
+    drawText = False
+    pygame.mixer.init()
+    titleMusic = sound.Sound("music/severedfifth_endofdays.ogg")
+    titleMusic.play()
+
+
+    def pyevent(self):
         global counter
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -56,24 +54,43 @@ def main():
                 # --- KEY handlers go HERE ---
                 if event.key == pygame.K_m:
                     print "c"
+                elif event.key == pygame.K_RETURN:
+                    self.titleMusic.stop()
+                    print "DO A THING"
                 elif event.key == pygame.K_x:
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
-        screen.blit(title, titlerect)
-        if counter == 0:
-            drawText = not drawText
-            counter = 100
-        counter -= 1
 
-        if drawText:
+        fontDrawer = font.Font("font/youmurdererbb_reg.ttf", 100, colors.RED)
+
+        self.screen.blit(self.title, self.titlerect)
+        if self.counter == 0:
+            self.drawText = not self.drawText
+            self.counter = 5
+        self.counter -= 1
+
+        if self.drawText:
             fontDrawer.draw(400,450, "PRESS ENTER TO START")
-        
-        pygame.display.flip()
-       
 
-    lc = LoopingCall(pyevent)
+        pygame.display.flip()
+
+
+
+# this connects the protocol to a server runing on port 8000
+def main():
+    addr = "localhost"
+    if len(sys.argv) > 1:
+        addr = sys.argv[1]
+
+    pygame.init()
+
+    pygame.display.set_caption("Iron Trotter")
+
+    h = Handler()
+
+    lc = LoopingCall(h.pyevent)
     lc.start(0.1)
 
-    reactor.connectTCP(addr, 8000, f)
+    reactor.connectTCP(addr, 8000, h.f)
     reactor.run()
 
 
