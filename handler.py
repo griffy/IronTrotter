@@ -15,6 +15,7 @@ import map
 import entity
 import font
 import sound
+import viewport
 
 class Handler:
     def __init__(self, screen):
@@ -38,8 +39,8 @@ class Handler:
         self.lc.start(0.1)
 
         self.map = map.generate_map(10,10)
-
         self.player = entity.Entity(Stats(0,0), entity.LIVING_ENTITIES[0], True, "Bob")
+        self.viewport = viewport.Viewport(self.player, 5, 5)
 
     def titleevent(self):
         global counter
@@ -97,8 +98,7 @@ class Handler:
         pygame.display.flip()
 
     def gameevent(self):
-       self.map.draw()
-       #self.map.update()
+       self.map.draw_within(self.viewport)
        pygame.display.flip()
 
     def handleUpdates(self, update):

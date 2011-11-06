@@ -136,6 +136,30 @@ BOSS_ENTITIES = [
     BOSS4
 ]
 
+def is_boss(entity_type):
+    for etype in BOSS_ENTITIES:
+        if entity_type == etype:
+            return True
+    return False
+
+def is_living(entity_type):
+    for etype in LIVING_ENTITIES:
+        if entity_type == etype:
+            return True
+    return False
+
+def is_item(entity_type):
+    for etype in ITEMS:
+        if entity_type == etype:
+            return True
+    return False
+
+def is_terrain(entity_type):
+    for etype in TERRAIN:
+        if entity_type == etype:
+            return True
+    return False
+
 def generate_terrain_entity(x, y, maptype, floor):
     # generate random map item of a given type
     if random.randint(0,10) == 10:
