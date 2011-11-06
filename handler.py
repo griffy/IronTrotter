@@ -22,6 +22,7 @@ import sound
 import viewport
 import scores
 import hud
+import sprite
 
 class Handler:
     def __init__(self, screen):
@@ -115,14 +116,16 @@ class Handler:
                 self.player_quit_game()
                 reactor.stop()
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w:
+                if event.key == pygame.K_w or event.key == pygame.K_k:
                     moved = self.player_move_up()
-                elif event.key == pygame.K_a:
+                elif event.key == pygame.K_a or event.key == pygame.K_h:
                     moved = self.player_move_left()
-                elif event.key == pygame.K_s:
+                elif event.key == pygame.K_s or event.key == pygame.K_j:
                     moved = self.player_move_down()
-                elif event.key == pygame.K_d:
+                elif event.key == pygame.K_d or event.key == pygame.K_l:
                     moved = self.player_move_right()
+                elif event.key == pygame.K_SPACE:
+                    self.player_attack()
         if moved:
             self.viewport.update_view()
             self.pickup_item()
@@ -179,6 +182,31 @@ class Handler:
             item.stats.score += scores.POTION
             self.f.transport.write(pickle.dumps(item.getUpdate(),2))
 
+    def player_attack(self):
+        direction = self.player.sprite.direction
+        x = self.player.stats.x
+        y = self.player.stats.y
+        if direction == sprite.LEFT:
+            if self.map.is_entity_blocked_left(self.player):
+                entity = self.map.layers[2].get(x-1, y)
+                entity.stats.hp -= 25
+                self.f.transport.write(pickle.dumps(entity.getUpdate()))
+        elif direction == sprite.RIGHT:
+            if self.map.is_entity_blocked_right(self.player):
+                entity = self.map.layers[2].get(x+1, y)
+                entity.stats.hp -= 25
+                self.f.transport.write(pickle.dumps(entity.getUpdate()))
+        elif direction == sprite.UP:
+            if self.map.is_entity_blocked_up(self.player):
+                entity = self.map.layers[2].get(x, y-1)
+                entity.stats.hp -= 25
+                self.f.transport.write(pickle.dumps(entity.getUpdate()))
+        elif direction == sprite.DOWN:
+            if self.map.is_entity_blocked_down(self.player):
+                entity = self.map.layers[2].get(x, y+1)
+                entity.stats.hp -= 25
+                self.f.transport.write(pickle.dumps(entity.getUpdate()))
+
     def player_quit_game(self):
         # set the player's health to 0 "killing" it
         # update the server
@@ -189,6 +217,7 @@ class Handler:
         if not self.map.is_entity_blocked_up(self.player):
             # update player, send to server
             self.player.stats.y -= 1
+            self.player.sprite.set_direction(0)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
@@ -197,6 +226,7 @@ class Handler:
         if not self.map.is_entity_blocked_left(self.player):
             # update player, send to server
             self.player.stats.x -= 1
+            self.player.sprite.set_direction(2)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
@@ -205,6 +235,7 @@ class Handler:
         if not self.map.is_entity_blocked_right(self.player):
             # update player, send to server
             self.player.stats.x += 1
+            self.player.sprite.set_direction(3)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
@@ -213,6 +244,7 @@ class Handler:
         if not self.map.is_entity_blocked_down(self.player):
             # update player, send to server
             self.player.stats.y += 1
+            self.player.sprite.set_direction(1)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
