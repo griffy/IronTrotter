@@ -79,7 +79,7 @@ class MapLayer:
     def draw(self):
         self.group.draw(pygame.display.get_surface())
 
-    def draw(self, viewport):
+    def draw_within(self, viewport):
         visible_group = pygame.sprite.Group()
         for entity in self.entities:
             if viewport.within_view(entity):
@@ -113,9 +113,9 @@ class Map:
         for layer in self.layers:
             layer.draw()
 
-    def draw(self, viewport):
+    def draw_within(self, viewport):
         for layer in self.layers:
-            layer.draw(viewport)
+            layer.draw_within(viewport)
 
     def save(self):
         pass
