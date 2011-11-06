@@ -177,7 +177,7 @@ class Handler:
                                        True, update.name, update.idnum)
                 if self.player is None:
                     self.player = entity
-                    self.viewport = viewport.Viewport(self.player, 14, 14)
+                    self.viewport = viewport.Viewport(self.player, 15, 15)
                 self.map.layers[2].add(entity)
 
         elif is_item(update.enttype):
