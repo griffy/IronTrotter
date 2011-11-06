@@ -11,6 +11,7 @@ import pygame
 import colors
 import map
 import font
+import sound
 
 class TrotterSub(protocol.Protocol):
     """Once connected, send a message, then print the result."""
@@ -39,6 +40,9 @@ class Handler:
 
     counter = 5
     drawText = False
+    pygame.mixer.init()
+    titleMusic = sound.Sound("music/severedfifth_endofdays.ogg")
+    titleMusic.play()
 
 
     def pyevent(self):
@@ -51,6 +55,7 @@ class Handler:
                 if event.key == pygame.K_m:
                     print "c"
                 elif event.key == pygame.K_RETURN:
+                    self.titleMusic.stop()
                     print "DO A THING"
                 elif event.key == pygame.K_x:
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
