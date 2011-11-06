@@ -1,3 +1,3 @@
 class MovingSprite(Sprite):
     def __init__(self):
-        self.__init__()
+        Sprite.__init__(self)
