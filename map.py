@@ -21,7 +21,7 @@ def generate_map(width, height):
 
 def _generate_terrain_layer(width, height):
     terrain_layer = MapLayer(width, height)
-   
+
     # figure out the map and floor tiles that we will be using
     maptype = random.randint(0,2)
     floor = 0
@@ -84,7 +84,7 @@ class MapLayer:
         for entity in self.entities:
             if viewport.within_view(entity):
                 visible_group.add(entity.sprite)
-        self.visible_group.draw(pygame.display.get_surface())
+        visible_group.draw(pygame.display.get_surface())
 
     def add(self, entity):
         self.group.add(entity.sprite)
@@ -106,6 +106,10 @@ class Map:
     def draw(self):
         for layer in self.layers:
             layer.draw()
+
+    def draw(self, viewport):
+        for layer in self.layers:
+            layer.draw(viewport)
 
     def save(self):
         pass
