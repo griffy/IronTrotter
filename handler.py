@@ -43,7 +43,7 @@ class Handler:
         pygame.mixer.pre_init(44100, -16, 2, 2048)
         self.titleMusic = sound.Sound("music/severedfifth_endofdays.ogg")
         self.titleMusic.play()
-        
+
         musics = [
             "severedfifth_drilldown.ogg",
             "severedfifth_fightphilosophy.ogg",
@@ -152,9 +152,24 @@ class Handler:
             self.pickup_item()
 
         self.map.update(self.viewport)
-        # draw updated
+        if self.map.is_cleared():
+            self.lc.stop()
+            self.lc = LoopingCall(self.gameoverevent)
+            self.lc.start(0.1)
+        else:
+            # draw updated
+            self.screen.fill(colors.BLACK)
+            self.map.draw_within(self.viewport)
+            self.hud.draw()
+            pygame.display.flip()
+
+    def gameoverevent(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                reactor.stop()
+
         self.screen.fill(colors.BLACK)
-        self.map.draw_within(self.viewport)
+        self.fontDrawer.draw(400, 280, "GAME OVER")
         self.hud.draw()
         pygame.display.flip()
 

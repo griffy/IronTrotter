@@ -5,6 +5,7 @@ from entity import generate_living_entity
 from entity import generate_terrain_entity
 from entity import generate_player_entity
 from entity import Entity
+from entity import is_living
 
 map_height = 16
 map_width = 16
@@ -231,6 +232,14 @@ class Map:
         if new_y >= self.height:
             return True
         return self.is_entity_blocked(new_x, new_y)
+
+    def is_cleared(self):
+        if len(self.layers[1].entities) > 0:
+            return False
+        for entity in self.layers[2].entities:
+            if is_living(entity):
+                return False
+        return True
 
     def addPlayer(self, up):
         ent = Entity(up.stats,up.enttype,True,up.name,up.idnum)
