@@ -132,13 +132,51 @@ class Map:
             ent = layer.get(x, y)
             if ent != None:
                 return ent
+        return None
 
     def getById(self, id_num):
         for layer in self.layers:
             ent = layer.getById(id_num)
             if ent != None:
                 return ent
+        return None
 
+    def is_entity_blocked(self, new_x, new_y):
+        terrain = self.layers[0].get(new_x, new_y)
+        if terrain and terrain.solid:
+            return True
+        living = self.layers[2].get(new_x, new_y)
+        if living and living.solid:
+            return True
+        return False
+
+    def is_entity_blocked_up(self, entity):
+        new_x = entity.stats.x
+        new_y = entity.stats.y-1
+        if new_y < 0:
+            return True
+        return self.is_entity_blocked(new_x, new_y)
+
+    def is_entity_blocked_left(self, entity):
+        new_x = entity.stats.x-1
+        new_y = entity.stats.y
+        if new_x < 0:
+            return True
+        return self.is_entity_blocked(new_x, new_y)
+
+    def is_entity_blocked_right(self, entity):
+        new_x = entity.stats.x+1
+        new_y = entity.stats.y
+        if new_x > self.width:
+            return True
+        return self.is_entity_blocked(new_x, new_y)
+
+    def is_entity_blocked_down(self, entity):
+        new_x = entity.stats.x
+        new_y = entity.stats.y+1
+        if new_y > self.height:
+            return True
+        return self.is_entity_blocked(new_x, new_y)
 
     def addPlayer(self, up):
         ent = Entity(up.stats,up.enttype,True,up.name,up.idnum)
