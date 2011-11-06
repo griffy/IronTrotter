@@ -68,8 +68,6 @@ class ServerGlobals:
                 if entity is not None:
                     entity.stats = up.stats
 
-            if is_living(up.enttype) and up.stats.hp <= 0:
-                self.map.layers[2].entities.remove(self.map.layers[2].getById(up.idnum))
         else:
             if up.name != "":
                 self.map.addPlayer(up)
