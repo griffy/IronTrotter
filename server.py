@@ -38,7 +38,7 @@ class TrotterPub(protocol.Protocol):
             # send to all other clients
             for t in self.factory.transports:
                 if t is not self.transport:
-                    self.transport.write(pickle.dumps(up,2))
+                    t.write(pickle.dumps(up,2))
 
     def connectionMade(self):
         self.factory.transports.append(self.transport)
