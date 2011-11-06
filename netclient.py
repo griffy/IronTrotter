@@ -3,19 +3,21 @@ import StringIO
 
 from twisted.internet import reactor, protocol
 
+from twisted.protocols.basic import LineReceiver
+
 from stats import Stats
 
 from update import Update, nullUpdate
 
-class TrotterSub(protocol.Protocol):
+class TrotterSub(LineReceiver):
     #def __init__(self):
     #    self.factory.transport = self.transport
 
     def connectionMade(self):
-        self.factory.transport = self.transport
-        self.transport.write(pickle.dumps(nullUpdate, 2))
+        self.factory.transport = self
+        self.sendLine(pickle.dumps(nullUpdate, 2))
 
-    def dataReceived(self, data):
+    def lineReceived(self, data):
         stringIO = StringIO.StringIO(data)
         up = pickle.Unpickler(stringIO)
         s = up.load()

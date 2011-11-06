@@ -7,8 +7,8 @@ from entity import generate_player_entity
 from entity import Entity
 from entity import is_living
 
-map_height = 16
-map_width = 16
+map_height = 20
+map_width = 20
 
 
 def makeMapFromFile(url):

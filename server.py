@@ -1,6 +1,8 @@
 from twisted.internet import reactor, protocol
 from twisted.internet.task import LoopingCall
 
+from twisted.protocols.basic import LineReceiver
+
 from stats import Stats
 from update import Update
 from random import choice
@@ -12,11 +14,11 @@ import map
 import entity
 import pygame
 
-class TrotterPub(protocol.Protocol):
+class TrotterPub(LineReceiver):
     def __init__(self):
         self.first = True
 
-    def dataReceived(self, data):
+    def lineReceived(self, data):
         up = pickle.loads(data)
 
         #self.factory.glob.update(up)
@@ -25,23 +27,23 @@ class TrotterPub(protocol.Protocol):
             self.first = False
             for layer in self.factory.glob.map.layers:
                 for ent in layer.entities:
-                    self.transport.write(pickle.dumps(ent.getUpdate(), 2))
+                    self.sendLine(pickle.dumps(ent.getUpdate(), 2))
 
             #generate a player
             player = entity.Entity(Stats(0,0),0, "BOB")
             self.factory.glob.update(player)
 
-            self.transport.write(pickle.dumps(player.getUpdate(),2))
+            self.sendLine(pickle.dumps(player.getUpdate(),2))
         else:
             self.factory.glob.update(up)
 
             # send to all other clients
             for t in self.factory.transports:
                 if t is not self.transport:
-                    t.write(pickle.dumps(up,2))
+                    t.sendLine(pickle.dumps(up,2))
 
     def connectionMade(self):
-        self.factory.transports.append(self.transport)
+        self.factory.transports.append(self)
 
 class MyFactory(protocol.Factory):
     def __init__(self, glob):
@@ -122,7 +124,7 @@ def main():
 
             # send updated position information to all other clients
             for t in factory.transports:
-                t.write(pickle.dumps(entity.getUpdate(),2))
+                t.sendLine(pickle.dumps(entity.getUpdate(),2))
 
     lc = LoopingCall(move_enemy)
     lc.start(1)
