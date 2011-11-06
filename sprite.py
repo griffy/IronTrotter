@@ -35,8 +35,4 @@ class Sprite(pygame.sprite.Sprite):
         self.rect.topleft = (self.rect.x + (random.randint(0,1) * -1) * 1, self.rect.y + (random.randint(0,1) * -1) * 1)
         if self.animated:
             self.frame = (self.frame + 1) % (len(self.images) - 1)
-            self.image = self.images[self.frame]           
-
-    #def draw(self):
-    #    screen = pygame.display.get_surface()
-    #    screen.blit(self.image, self.rect)
+            self.image = self.images[self.frame]
