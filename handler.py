@@ -98,6 +98,7 @@ class Handler:
 
     def gameevent(self):
        self.map.draw()
+       self.map.update()
        pygame.display.flip()
 
     def handleUpdates(self, update):
