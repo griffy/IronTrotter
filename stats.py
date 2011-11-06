@@ -3,3 +3,4 @@ class Stats:
         self.x = x
         self.y = y
         self.hp = hp
+        self.score = 0
