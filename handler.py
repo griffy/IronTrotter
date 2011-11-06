@@ -69,6 +69,7 @@ class Handler:
                 elif event.key == pygame.K_x:
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
 
+        self.screen.fill(colors.BLACK)
         self.screen.blit(self.title, self.titlerect)
         if self.counter == 0:
             self.drawText = not self.drawText
@@ -81,9 +82,6 @@ class Handler:
         pygame.display.flip()
 
     def lobbyevent(self):
-        # TODO: the below should be set after the server responds with updates
-        #self.player = entity.Entity(Stats(0,0), entity.LIVING_ENTITIES[0], True, "Bob")
-        #self.viewport = viewport.Viewport(self.player, 5, 5)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 reactor.stop()
@@ -97,6 +95,7 @@ class Handler:
                 elif event.key == pygame.K_x:
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
 
+        self.screen.fill(colors.BLACK)
         self.screen.blit(self.title, self.titlerect)
         if self.counter == 0:
             self.drawText = not self.drawText
@@ -132,6 +131,7 @@ class Handler:
 
         self.map.update(self.viewport)
         # draw updated
+        self.screen.fill(colors.BLACK)
         self.map.draw_within(self.viewport)
         self.hud.draw()
         pygame.display.flip()
@@ -214,37 +214,37 @@ class Handler:
         self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
 
     def player_move_up(self):
+        self.player.sprite.set_direction(sprite.UP)
         if not self.map.is_entity_blocked_up(self.player):
             # update player, send to server
             self.player.stats.y -= 1
-            self.player.sprite.set_direction(sprite.UP)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
 
     def player_move_left(self):
+        self.player.sprite.set_direction(sprite.LEFT)
         if not self.map.is_entity_blocked_left(self.player):
             # update player, send to server
             self.player.stats.x -= 1
-            self.player.sprite.set_direction(sprite.LEFT)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
 
     def player_move_right(self):
+        self.player.sprite.set_direction(sprite.RIGHT)
         if not self.map.is_entity_blocked_right(self.player):
             # update player, send to server
             self.player.stats.x += 1
-            self.player.sprite.set_direction(sprite.RIGHT)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
 
     def player_move_down(self):
+        self.player.sprite.set_direction(sprite.DOWN)
         if not self.map.is_entity_blocked_down(self.player):
             # update player, send to server
             self.player.stats.y += 1
-            self.player.sprite.set_direction(sprite.DOWN)
             self.f.transport.write(pickle.dumps(self.player.getUpdate(),2))
             return True
         return False
