@@ -37,6 +37,7 @@ class Handler:
         self.lc = LoopingCall(self.titleevent)
         self.lc.start(0.1)
 
+        self.map = map.generate_map(10,10)
 
     def titleevent(self):
         global counter
@@ -93,3 +94,6 @@ class Handler:
 
         pygame.display.flip()
 
+    def gameevent(self):
+       self.map.draw()
+       pygame.display.flip()

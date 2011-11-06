@@ -139,5 +139,5 @@ class Entity:
             self.id_num = id_num
         self.stats = stats
         self.ent_type = ent_type
-        self.sprite = Sprite(TYPES[self.ent_type])
+        self.sprite = Sprite(TYPES[self.ent_type], stats.x, stats.y)
         self.solid = solid
