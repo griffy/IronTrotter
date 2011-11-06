@@ -1,4 +1,5 @@
 import os
+import random
 import pygame
 import spritesheet
 
@@ -31,8 +32,9 @@ class Sprite(pygame.sprite.Sprite):
             self.image = self.images[0]
             self.frame = 0
 
-    def update(self):
-        self.rect.topleft = (self.rect.x + (random.randint(0,1) * -1) * 1, self.rect.y + (random.randint(0,1) * -1) * 1)
+    def update(self, stats):
+        self.rect.topleft = (stats.x*32, stats.y*32)
+        #self.rect.topleft = (self.rect.x + (random.randint(0,1) * -1) * 1, self.rect.y + (random.randint(0,1) * -1) * 1)
         if self.animated:
             self.frame = (self.frame + 1) % (len(self.images) - 1)
             self.image = self.images[self.frame]

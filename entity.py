@@ -221,5 +221,8 @@ class Entity:
         self.solid = solid
         self.name = name
 
+    def update(self):
+        self.sprite.update(self.stats)
+
     def getUpdate(self):
         return Update(self.id_num, self.ent_type, self.stats, self.name)
