@@ -40,8 +40,27 @@ class Handler:
         self.drawText = False
 
         pygame.mixer.init()
+        pygame.mixer.pre_init(44100, -16, 2, 2048)
         self.titleMusic = sound.Sound("music/severedfifth_endofdays.ogg")
         self.titleMusic.play()
+        
+        musics = [
+            "severedfifth_drilldown.ogg",
+            "severedfifth_fightphilosophy.ogg",
+            "severedfifth_machinesofwar.ogg",
+            "severedfifth_repent.ogg",
+            "severedfifth_endofdays.ogg",
+            "severedfifth_foretoldrevelation.ogg",
+            "severedfifth_theblackening.ogg",
+            "severedfifth_fallout.ogg",
+            "severedfifth_forgottenheroes.ogg",
+            "severedfifth_politicold.ogg",
+            "severedfifth_theyprey.ogg"
+        ]
+
+        self.gameMusic = pygame.mixer.Sound("music/"+choice(musics))
+        self.attackSound = pygame.mixer.Sound("sounds/erdie__sword01.wav")
+
 
         self.lc = LoopingCall(self.titleevent)
         self.lc.start(0.1)
@@ -62,6 +81,7 @@ class Handler:
                     print "c"
                 elif event.key == pygame.K_RETURN:
                     self.titleMusic.stop()
+                    self.gameMusic.play()
                     print "DO A THING"
                     self.lc.stop()
                     self.lc = LoopingCall(self.lobbyevent)
@@ -125,6 +145,7 @@ class Handler:
                 elif event.key == pygame.K_d or event.key == pygame.K_l:
                     moved = self.player_move_right()
                 elif event.key == pygame.K_SPACE:
+                    self.attackSound.play()
                     self.player_attack()
         if moved:
             self.viewport.update_view()
