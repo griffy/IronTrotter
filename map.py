@@ -3,6 +3,7 @@ import pygame
 from entity import generate_item_entity
 from entity import generate_living_entity
 from entity import generate_terrain_entity
+from entity import generate_player_entity
 
 def makeMapFromFile(url):
     pass
@@ -20,9 +21,16 @@ def generate_map(width, height):
 
 def _generate_terrain_layer(width, height):
     terrain_layer = MapLayer(width, height)
+
+    # figure out the map and floor tiles that we will be using
+    maptype = random.randint(0,2)
+    floor = 0
+    if maptype == 2:
+       floor = random.randint(0,9)
+
     for x in range(width):
         for y in range(height):
-            entity = generate_terrain_entity(x, y)
+            entity = generate_terrain_entity(x, y, maptype, floor)
             terrain_layer.add(entity)
     return terrain_layer
 
@@ -42,12 +50,20 @@ def _generate_living_entities_layer(terrain_layer, items_layer):
     width = terrain_layer.width
     height = terrain_layer.height
     entities_layer = MapLayer(width, height)
+
+    # TODO: based this on the number of players
+    player_count = 3
+
     for x in range(width):
         for y in range(height):
             if not items_layer.get(x, y) and not terrain_layer.get(x, y).solid:
                 if random.randint(1, 10) == 1:
                     entity = generate_living_entity(x, y)
                     entities_layer.add(entity)
+                elif random.randint(1, 10) == 1 and player_count > 0:
+                    entity = generate_player_entity(x, y)
+                    entities_layer.add(entity)
+                    player_count -= 1
     return entities_layer
 
 
@@ -62,6 +78,13 @@ class MapLayer:
 
     def draw(self):
         self.group.draw(pygame.display.get_surface())
+
+    def draw(self, viewport):
+        visible_group = pygame.sprite.Group()
+        for entity in self.entities:
+            if viewport.within_view(entity):
+                visible_group.add(entity.sprite)
+        visible_group.draw(pygame.display.get_surface())
 
     def add(self, entity):
         self.group.add(entity.sprite)
@@ -83,6 +106,10 @@ class Map:
     def draw(self):
         for layer in self.layers:
             layer.draw()
+
+    def draw(self, viewport):
+        for layer in self.layers:
+            layer.draw(viewport)
 
     def save(self):
         pass

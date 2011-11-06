@@ -65,6 +65,30 @@ REDWOOD_UPDOWN_TILE = 26
 WOOD_LEFTRIGHT_TILE = 27
 WOOD_UPDOWN_TILE = 28
 
+INDOOR_TYPE = [
+    DEPTH_GRAY_TILE,
+    FLAT_GRAY_TILE,
+    SIMPLE_GRAY_TILE,
+    STONE_TILE,
+    METAL_TILE,
+    REDWOOD_LEFTRIGHT_TILE,
+    REDWOOD_UPDOWN_TILE,
+    WOOD_LEFTRIGHT_TILE,
+    WOOD_UPDOWN_TILE
+]
+
+SPRING_TYPE = [
+    GRASS_TILE,
+    SPRING_TREE_TILE
+]
+
+FALL_TYPE = [
+    GRASS_TILE,
+    FALL_TREE1_TILE,
+    FALL_TREE2_TILE,
+    FALL_TREE3_TILE
+]
+
 TERRAIN = [
     DEPTH_GRAY_TILE,
     FLAT_GRAY_TILE,
@@ -99,19 +123,34 @@ ITEMS = [
 ]
 
 LIVING_ENTITIES = [
-    SHEEP,
-    BOSS1,
-    BOSS2,
-    BOSS3,
-    BOSS4,
     GHOST1,
     GHOST2,
     GHOST3,
     GHOST4,
 ]
 
-def generate_terrain_entity(x, y):
-    ent_type = TERRAIN[random.randint(0, len(TERRAIN)-1)]
+BOSS_ENTITIES = [
+    BOSS1,
+    BOSS2,
+    BOSS3,
+    BOSS4
+]
+
+def generate_terrain_entity(x, y, maptype, floor):
+    # generate random map item of a given type
+    if random.randint(0,10) == 10:
+        if maptype == 0:
+            ent_type = FALL_TYPE[random.randint(1,len(FALL_TYPE)-1)]
+        elif maptype == 1:
+            ent_type = SPRING_TREE_TILE
+        else:
+            ent_type = SOLID_GRAY_TILE
+    else:
+        if maptype == 0 or maptype == 1:
+            ent_type = GRASS_TILE
+        else: 
+            ent_type = INDOOR_TYPE[floor]
+
     stats = Stats(x, y)
     solid = False
     if ent_type in SOLID_TERRAIN:
@@ -129,6 +168,9 @@ def generate_living_entity(x, y):
     stats = Stats(x, y)
     solid = True
     return Entity(stats, ent_type, solid)
+
+def generate_player_entity(x, y):
+    return Entity(Stats(x, y), SHEEP, True)
 
 class Entity:
     count = 0
