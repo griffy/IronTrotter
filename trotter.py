@@ -37,8 +37,8 @@ class Handler:
     f = protocol.ClientFactory()
     f.protocol = TrotterSub
 
-    counter = 100
-    drawText = True
+    counter = 5
+    drawText = False
 
 
     def pyevent(self):
@@ -58,7 +58,7 @@ class Handler:
         self.screen.blit(self.title, self.titlerect)
         if self.counter == 0:
             self.drawText = not self.drawText
-            self.counter = 100
+            self.counter = 5
         self.counter -= 1
 
         if self.drawText:
